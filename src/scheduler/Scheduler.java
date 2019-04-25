@@ -5,6 +5,7 @@
  */
 package scheduler;
 
+import database.Database;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,16 +14,17 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author wtill
+ * @author Will Tillett
  */
 public class Scheduler extends Application {
-    
+
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
-        
+        Parent root = FXMLLoader.load(getClass()
+                .getResource("FXMLDocument.fxml"));
+
         Scene scene = new Scene(root);
-        
+
         stage.setScene(scene);
         stage.show();
     }
@@ -31,7 +33,9 @@ public class Scheduler extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        Database.connect();
         launch(args);
+        Database.disconnect();
     }
-    
+
 }
