@@ -5,9 +5,14 @@
  */
 package database;
 
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
+import javax.sql.DataSource;
 
 /**
  *
@@ -47,5 +52,23 @@ public class Database {
 
     public static Connection getConnection() {
         return connection;
+    }
+    
+    public static DataSource getDataSource() {
+        Properties properties = new Properties();
+        FileInputStream fis = null;
+        MysqlDataSource ds = null;
+        try {
+            fis = new FileInputStream("src/res/db.properties");
+            properties.load(fis);
+            ds = new MysqlDataSource();
+            
+            ds.setURL(properties.getProperty("MYSQL_DB_URL"));
+            ds.setUser(properties.getProperty("MYSQL_DB_USERNAME"));
+            ds.setPassword(properties.getProperty("MYSQL_DB_PASSWORD"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ds;
     }
 }
