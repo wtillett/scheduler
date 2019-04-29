@@ -5,13 +5,19 @@
  */
 package scheduler.view;
 
+import database.Database;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javax.sql.DataSource;
 
 /**
  *
@@ -20,19 +26,45 @@ import javafx.scene.control.Label;
 public class LoginController implements Initializable {
 
     @FXML
-    private Button button;
+    private TextField usernameField;
     @FXML
-    private Label label;
+    private TextField passwordField;
+    @FXML
+    private Button cancelBtn;
+    @FXML
+    private Button loginBtn;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
     }
 
+    private void handleButtonAction(ActionEvent event) throws SQLException {
+        DataSource ds = Database.getDataSource();
+        ResultSet rs = null;
+        Statement statement = null;
+        try {
+            Connection conn = ds.getConnection();
+            statement = conn.createStatement();
+            rs = statement.executeQuery("SELECT * FROM city");
+            while (rs.next()) {
+                System.out.println(rs.getString("city"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (statement != null) statement.close();
+        }
+    }
+
     @FXML
-    private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
+    private void handleCancelBtn(ActionEvent event) {
+    }
+
+    @FXML
+    private void handleLoginBtn(ActionEvent event) throws SQLException {
+        DataSource ds = Database.getDataSource();
+        Database.testQuery(ds.getConnection());
     }
 
 }
