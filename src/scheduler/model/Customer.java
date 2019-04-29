@@ -20,7 +20,7 @@ public class Customer {
     private final SimpleIntegerProperty addressId = new SimpleIntegerProperty();
 
     // Address table
-    private final SimpleStringProperty address1 = new SimpleStringProperty();
+    private final SimpleStringProperty address = new SimpleStringProperty();
     private final SimpleStringProperty address2 = new SimpleStringProperty();
     private final SimpleIntegerProperty cityId = new SimpleIntegerProperty();
     private final SimpleStringProperty postalCode = new SimpleStringProperty();
@@ -37,6 +37,37 @@ public class Customer {
     public Customer() {
     }
 
+    public Customer(int customerId, String name, int addressId,
+            String address, String address2, int cityId, String postalCode,
+            String phone, String city, int countryId, String country) {
+        setCustomerId(customerId);
+        setCustomerName(name);
+        setAddressId(addressId);
+        setAddress(address);
+        setAddress2(address2);
+        setCityId(cityId);
+        setPostalCode(postalCode);
+        setPhone(phone);
+        setCity(city);
+        setCountryId(countryId);
+        setCountry(country);
+    }
+
+    public Customer(String name, int addressId, String address,
+            String address2, int cityId, String postalCode, String phone,
+            String city, int countryId, String country) {
+        setCustomerName(name);
+        setAddressId(addressId);
+        setAddress(address);
+        setAddress2(address2);
+        setCityId(cityId);
+        setPostalCode(postalCode);
+        setPhone(phone);
+        setCity(city);
+        setCountryId(countryId);
+        setCountry(country);
+    }
+
     // Setters
     public void setCustomerId(int id) {
         this.customerId.set(id);
@@ -50,8 +81,8 @@ public class Customer {
         this.addressId.set(id);
     }
 
-    public void setAddress1(String address) {
-        this.address1.set(address);
+    public void setAddress(String address) {
+        this.address.set(address);
     }
 
     public void setAddress2(String address) {
@@ -95,8 +126,8 @@ public class Customer {
         return addressId;
     }
 
-    public SimpleStringProperty getAddress1() {
-        return address1;
+    public SimpleStringProperty getAddress() {
+        return address;
     }
 
     public SimpleStringProperty getAddress2() {

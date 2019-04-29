@@ -7,17 +7,17 @@ package scheduler.view;
 
 import database.Database;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javax.sql.DataSource;
+import scheduler.model.Customer;
+import scheduler.model.CustomerDAO;
 
 /**
  *
@@ -33,37 +33,27 @@ public class LoginController implements Initializable {
     private Button cancelBtn;
     @FXML
     private Button loginBtn;
+    @FXML
+    private Label loginLabel;
+    
+    CustomerDAO cDAO;
+    DataSource ds;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-    }
-
-    private void handleButtonAction(ActionEvent event) throws SQLException {
-        DataSource ds = Database.getDataSource();
-        ResultSet rs = null;
-        Statement statement = null;
-        try {
-            Connection conn = ds.getConnection();
-            statement = conn.createStatement();
-            rs = statement.executeQuery("SELECT * FROM city");
-            while (rs.next()) {
-                System.out.println(rs.getString("city"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (statement != null) statement.close();
-        }
+        ds = Database.getDataSource();
+        cDAO = new CustomerDAO(ds);
     }
 
     @FXML
     private void handleCancelBtn(ActionEvent event) {
+        Customer c = cDAO.findCustomer(1);
+        String s = c.getCustomerName().getValue() + " " + c.getAddress().getValue() + ", " + c.getCity().getValue();
+        loginLabel.setText(s);
     }
 
     @FXML
-    private void handleLoginBtn(ActionEvent event) throws SQLException {
-        DataSource ds = Database.getDataSource();
+    private void handleLoginBtn(ActionEvent event) throws SQLException{
         Database.testQuery(ds.getConnection());
     }
 
