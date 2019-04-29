@@ -5,10 +5,10 @@
  */
 package scheduler.model;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.sql.DataSource;
 
 /**
  *
@@ -16,10 +16,10 @@ import javax.sql.DataSource;
  */
 public class CustomerDAO {
 
-    private final DataSource ds;
+    private final Connection conn;
 
-    public CustomerDAO(DataSource ds) {
-        this.ds = ds;
+    public CustomerDAO(Connection conn) {
+        this.conn = conn;
     }
 
     public Customer findCustomer(int customerId) {
@@ -32,7 +32,7 @@ public class CustomerDAO {
         final Customer c = new Customer();
 
         try (PreparedStatement findCustomer
-                = ds.getConnection().prepareStatement(query)) {            
+                = conn.prepareStatement(query)) {            
             findCustomer.setInt(1, customerId);
             ResultSet rs = findCustomer.executeQuery();
             while (rs.next()) {
