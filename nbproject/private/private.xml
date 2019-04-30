@@ -5,10 +5,10 @@
         <group>
             <file>file:/C:/Users/wtill/Desktop/projects/scheduler/src/scheduler/view/LoginController.java</file>
             <file>file:/C:/Users/wtill/Desktop/projects/scheduler/src/scheduler/Scheduler.java</file>
+            <file>file:/C:/Users/wtill/Desktop/projects/scheduler/src/scheduler/database/Database.java</file>
             <file>file:/C:/Users/wtill/Desktop/projects/scheduler/src/scheduler/view/Login.fxml</file>
             <file>file:/C:/Users/wtill/Desktop/projects/scheduler/src/scheduler/model/CustomerDAO.java</file>
             <file>file:/C:/Users/wtill/Desktop/projects/scheduler/src/scheduler/model/Customer.java</file>
-            <file>file:/C:/Users/wtill/Desktop/projects/scheduler/src/database/Database.java</file>
         </group>
     </open-files>
 </project-private>
