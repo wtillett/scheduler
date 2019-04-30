@@ -55,7 +55,8 @@ public class LoginController implements Initializable {
     @FXML
     private void handleCancelBtn(ActionEvent event) {
         Customer c = cDAO.findCustomer(1);
-        String s = c.getCustomerName().getValue() + " " + c.getAddress().getValue() + ", " + c.getCity().getValue();
+        String s = c.getCustomerName().getValue() + " "
+                + c.getAddress().getValue() + ", " + c.getCity().getValue();
         loginLabel.setText(s);
     }
 

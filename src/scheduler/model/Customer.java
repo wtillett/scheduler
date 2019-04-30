@@ -14,10 +14,12 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class Customer {
 
-    // From customer table - ignoring the active field
+    // From customer table
     private final SimpleIntegerProperty customerId = new SimpleIntegerProperty();
     private final SimpleStringProperty customerName = new SimpleStringProperty();
     private final SimpleIntegerProperty addressId = new SimpleIntegerProperty();
+    // Ignoring active field and setting to 1
+    private final int active = 1;
 
     // Address table
     private final SimpleStringProperty address = new SimpleStringProperty();
