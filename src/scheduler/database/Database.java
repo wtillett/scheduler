@@ -70,7 +70,7 @@ public abstract class Database {
             ds.setPassword(properties.getProperty("MYSQL_DB_PASSWORD"));
             conn = ds.getConnection();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Unable to connect to database");
         } catch (SQLException ex) {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
