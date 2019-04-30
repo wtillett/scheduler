@@ -9,8 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -20,7 +20,6 @@ public class CustomerDAO {
 
     private final Connection conn;
     private User user;
-    
 
     public CustomerDAO(Connection conn) {
         this.conn = conn;
@@ -42,16 +41,16 @@ public class CustomerDAO {
                 return extractCustomerFromResultSet(rs);
             }
         } catch (SQLException e) {
-            System.out.println("Customer not found!");
+            System.out.println("Customer not found");
         }
         return null;
     }
 
-    public List<Customer> getAllCustomers() {
+    public ObservableList<Customer> getAllCustomers() {
         final String query = "SELECT * FROM customer";
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
-            List customers = new ArrayList();
+            ObservableList customers = FXCollections.observableArrayList();
             while (rs.next()) {
                 Customer customer = extractCustomerFromResultSet(rs);
                 customers.add(customer);
@@ -62,7 +61,7 @@ public class CustomerDAO {
         }
         return null;
     }
-    
+
     public boolean insertCustomer(Customer customer) {
         return true;
     }
