@@ -31,8 +31,7 @@ public class CustomerDAO {
                 + "WHERE customerId = ?";
         final Customer c = new Customer();
 
-        try (PreparedStatement findCustomer
-                = conn.prepareStatement(query)) {            
+        try (PreparedStatement findCustomer = conn.prepareStatement(query)) {            
             findCustomer.setInt(1, customerId);
             ResultSet rs = findCustomer.executeQuery();
             while (rs.next()) {

@@ -9,6 +9,7 @@ import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -50,5 +51,23 @@ public class Database {
             e.printStackTrace();
         }
         return ds;
+    }
+
+    public static boolean checkCredentials(Connection conn,
+            String user, String pass) {
+        final String query = "SELECT password "
+                + "FROM user "
+                + "WHERE userName = ?";
+        String password = "";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(0, user);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                password = rs.getString("password");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getSQLState());
+        }
+        return pass.equals(password);
     }
 }
