@@ -17,7 +17,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javax.sql.DataSource;
 import scheduler.model.Customer;
 import scheduler.model.CustomerDAO;
 
@@ -43,12 +42,8 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        DataSource ds = Database.getDataSource();
-        try {
-            conn = ds.getConnection();
-        } catch (SQLException e) {
-            System.out.println(e.getSQLState());
-        }
+
+        conn = Database.getConnection();
         cDAO = new CustomerDAO(conn);
     }
 
@@ -62,7 +57,12 @@ public class LoginController implements Initializable {
 
     @FXML
     private void handleLoginBtn(ActionEvent event) throws SQLException {
-        Database.testQuery(conn);
+        String user = usernameField.getText();
+        System.out.println("user = " + user);
+        String pass = passwordField.getText();
+        System.out.println("pass = " + pass);
+        boolean flag = Database.checkCredentials(conn, user, pass);
+        loginLabel.setText(flag ? "Passed" : "Failed");
     }
 
 }
