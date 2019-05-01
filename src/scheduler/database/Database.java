@@ -9,10 +9,7 @@ import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,19 +20,8 @@ import javax.sql.DataSource;
  * @author Will Tillett
  */
 public abstract class Database {
-
-    public static void testQuery(Connection conn) throws SQLException {
-        DataSource ds = getDataSource();
-        ResultSet rs = null;
-        try (Statement statement = conn.createStatement()) {
-            rs = statement.executeQuery("SELECT * FROM city");
-            while (rs.next()) {
-                System.out.println(rs.getString("city"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    
+    public static String currentUser;
 
     public static DataSource getDataSource() {
         Properties properties = new Properties();
@@ -76,22 +62,12 @@ public abstract class Database {
         }
         return conn;
     }
-
-    public static boolean checkCredentials(Connection conn,
-            String user, String pass) {
-        final String query = "SELECT password "
-                + "FROM user "
-                + "WHERE userName = ?";
-        String password = "";
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setString(1, user);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                password = rs.getString("password");
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getSQLState());
-        }
-        return pass.equals(password);
+    
+    public static void setCurrentUser(String userName) {
+        currentUser = userName;
+    }
+    
+    public static String getCurrentUser() {
+        return currentUser;
     }
 }

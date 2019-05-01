@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import scheduler.database.Database;
 
 /**
  *
@@ -19,7 +20,6 @@ import javafx.collections.ObservableList;
 public class CustomerDAO {
 
     private final Connection conn;
-    private User user;
 
     public CustomerDAO(Connection conn) {
         this.conn = conn;
@@ -32,8 +32,6 @@ public class CustomerDAO {
                 + "JOIN city ON address.cityId = city.cityId "
                 + "JOIN country ON city.countryId = country.countryId "
                 + "WHERE customerId = ?";
-        final Customer c = new Customer();
-
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, customerId);
             ResultSet rs = ps.executeQuery();
@@ -63,6 +61,7 @@ public class CustomerDAO {
     }
 
     public boolean insertCustomer(Customer customer) {
+
         return true;
     }
 
@@ -83,4 +82,35 @@ public class CustomerDAO {
 
         return customer;
     }
+
+    private void checkCountry(Customer customer) {
+        String country = customer.getCountry().getValue();
+        String query = "INSERT INTO country (country) "
+                + "SELECT * FROM (SELECT ?) AS temp "
+                + "WHERE NOT EXISTS (SELECT country "
+                + "FROM country WHERE country = ?) LIMIT 1";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, country);
+            ps.setString(2, country);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void checkCity(Customer customer) {
+        String city = customer.getCity().getValue();
+        String query = "INSERT INTO city (city) "
+                + "SELECT * FROM (SELECT ?) AS temp "
+                + "WHERE NOT EXISTS (SELECT city "
+                + "FROM city WHERE city = ?) LIMIT 1";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, city);
+            ps.setString(2, city);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 }

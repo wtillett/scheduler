@@ -8,6 +8,8 @@ package scheduler.view;
 import scheduler.database.Database;
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -19,6 +21,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import scheduler.model.Customer;
 import scheduler.model.CustomerDAO;
+import scheduler.model.UserDAO;
 
 /**
  *
@@ -38,13 +41,14 @@ public class LoginController implements Initializable {
     private Label loginLabel;
 
     CustomerDAO cDAO;
+    UserDAO uDAO;
     Connection conn;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         conn = Database.getConnection();
         cDAO = new CustomerDAO(conn);
+        uDAO = new UserDAO(conn);
     }
 
     @FXML
@@ -61,8 +65,37 @@ public class LoginController implements Initializable {
         System.out.println("user = " + user);
         String pass = passwordField.getText();
         System.out.println("pass = " + pass);
-        boolean flag = Database.checkCredentials(conn, user, pass);
-        loginLabel.setText(flag ? "Passed" : "Failed");
+        login(user, pass);
+    }
+
+    private void login(String userName, String password) {
+        if (checkCredentials(userName, password)) {
+            Database.setCurrentUser(userName);
+        }
+        // TODO: Finish login method
+    }
+
+    private boolean checkCredentials(String userName, String password) {
+        if (userName.isEmpty() || password.isEmpty()) {
+            return false;
+        }
+        final String query = "SELECT password "
+                + "FROM user "
+                + "WHERE userName = ?";
+        String dbPassword = "";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, userName);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                dbPassword = rs.getString("password");
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getSQLState());
+            return false;
+        }
+        return password.equals(dbPassword);
     }
 
 }
