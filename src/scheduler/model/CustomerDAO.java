@@ -44,7 +44,10 @@ public class CustomerDAO {
     }
 
     public ObservableList<Customer> getAllCustomers() {
-        final String query = "SELECT * FROM customer";
+        final String query = "SELECT * FROM customer "
+                + "JOIN address ON customer.addressId = address.addressId "
+                + "JOIN city ON address.cityId = city.cityId "
+                + "JOIN country ON city.countryId = country.country.Id";
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
             ObservableList customers = FXCollections.observableArrayList();
