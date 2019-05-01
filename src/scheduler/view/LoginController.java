@@ -61,7 +61,7 @@ public class LoginController implements Initializable {
     }
 
     @FXML
-    private void handleLoginBtn(ActionEvent event) throws SQLException {
+    private void handleLoginBtn(ActionEvent event) {
         String user = usernameField.getText();
         String pass = passwordField.getText();
         login(user, pass);
@@ -73,9 +73,15 @@ public class LoginController implements Initializable {
         }
         // TODO: Finish login method
         ObservableList<Customer> customers = cDAO.getAllCustomers();
-//        System.out.println(customers);
-//        cDAO.insertCustomer(customers.get(0));
-//        System.out.println(cDAO.getAllCustomers());        
+        for (Customer c : customers) {
+            System.out.println(c.getCustomerName().getValue());
+        }
+        cDAO.insertCustomer(customers.get(0));
+        
+        customers = cDAO.getAllCustomers();
+        for (Customer c : customers) {
+            System.out.println(c.getCustomerName().getValue());
+        }
     }
 
     private boolean checkCredentials(String userName, String password) {

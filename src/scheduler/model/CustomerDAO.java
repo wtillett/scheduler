@@ -9,8 +9,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import scheduler.database.Database;
 
 /**
  *
@@ -19,9 +21,11 @@ import javafx.collections.ObservableList;
 public class CustomerDAO {
 
     private final Connection conn;
+    private static Timestamp now;
 
     public CustomerDAO(Connection conn) {
         this.conn = conn;
+        this.now = new Timestamp(System.currentTimeMillis());
     }
 
     public Customer getCustomer(int customerId) {
@@ -47,7 +51,7 @@ public class CustomerDAO {
         final String query = "SELECT * FROM customer "
                 + "JOIN address ON customer.addressId = address.addressId "
                 + "JOIN city ON address.cityId = city.cityId "
-                + "JOIN country ON city.countryId = country.country.Id";
+                + "JOIN country ON city.countryId = country.countryId";
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
             ObservableList customers = FXCollections.observableArrayList();
@@ -67,16 +71,26 @@ public class CustomerDAO {
         checkCity(customer);
         checkAddress(customer);
         String customerName = customer.getCustomerName().getValue();
+        int addressId = customer.getAddressId().getValue();
         int result = 0;
-        String query = "INSERT INTO customer (customerName) "
-                + "SELECT * FROM (SELECT ?) AS temp "
+        String query = "INSERT INTO customer "
+                + "(customerName, addressId, active, "
+                + "createDate, createdBy, lastUpdate, lastUpdateBy) "
+                + "SELECT * FROM (SELECT ?, ?, ?, ?, ?, ?, ?) AS temp "
                 + "WHERE NOT EXISTS (SELECT customerName "
                 + "FROM customer WHERE customerName = ?) LIMIT 1";
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, customerName);
+            ps.setInt(2, addressId);
+            ps.setInt(3, new Integer(1));
+            ps.setTimestamp(4, now);
+            ps.setString(5, Database.getCurrentUser());
+            ps.setTimestamp(6, now);
+            ps.setString(7, Database.getCurrentUser());
+            ps.setString(8, customerName);
             result = ps.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("insertCustomer: " + e.getMessage());
         }
         return result == 1;
     }
@@ -101,16 +115,21 @@ public class CustomerDAO {
 
     private void checkCountry(Customer customer) {
         String country = customer.getCountry().getValue();
-        String query = "INSERT INTO country (country) "
-                + "SELECT * FROM (SELECT ?) AS temp "
+        String query = "INSERT INTO country (country, "
+                + "createDate, createdBy, lastUpdate, lastUpdateBy) "
+                + "SELECT * FROM (SELECT ?, ?, ?, ?, ?) AS temp "
                 + "WHERE NOT EXISTS (SELECT country "
                 + "FROM country WHERE country = ?) LIMIT 1";
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, country);
-            ps.setString(2, country);
+            ps.setTimestamp(2, now);
+            ps.setString(3, Database.getCurrentUser());
+            ps.setTimestamp(4, now);
+            ps.setString(5, Database.getCurrentUser());
+            ps.setString(6, country);
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("checkCountry: " + e.getMessage());
         }
     }
 
@@ -127,7 +146,7 @@ public class CustomerDAO {
             ps.setString(3, city);
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("checkCity: " + e.getMessage());
         }
     }
 
@@ -151,7 +170,7 @@ public class CustomerDAO {
             ps.setString(6, address);
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("checkAddress: " + e.getMessage());
         }
     }
 
