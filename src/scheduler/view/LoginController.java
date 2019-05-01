@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -62,9 +63,7 @@ public class LoginController implements Initializable {
     @FXML
     private void handleLoginBtn(ActionEvent event) throws SQLException {
         String user = usernameField.getText();
-        System.out.println("user = " + user);
         String pass = passwordField.getText();
-        System.out.println("pass = " + pass);
         login(user, pass);
     }
 
@@ -73,6 +72,10 @@ public class LoginController implements Initializable {
             Database.setCurrentUser(userName);
         }
         // TODO: Finish login method
+        ObservableList<Customer> customers = cDAO.getAllCustomers();
+//        System.out.println(customers);
+//        cDAO.insertCustomer(customers.get(0));
+//        System.out.println(cDAO.getAllCustomers());        
     }
 
     private boolean checkCredentials(String userName, String password) {
