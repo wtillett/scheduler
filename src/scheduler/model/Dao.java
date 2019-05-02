@@ -14,7 +14,7 @@ import java.util.Optional;
  */
 public interface Dao<T> {
 
-    Optional<T> get(int id);
+    <T> t get(int id);
 
     List<T> getAll();
 
