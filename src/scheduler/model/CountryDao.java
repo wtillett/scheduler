@@ -7,9 +7,12 @@ package scheduler.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import scheduler.database.Database;
 
 /**
  *
@@ -106,7 +109,8 @@ public class CountryDao implements Dao<Country> {
         }
     }
     
-    private Country extractCountryFromResultSet(ResultSet rs) {
+    private Country extractCountryFromResultSet(ResultSet rs) 
+            throws SQLException {
         Country country = new Country();
         
         country.setCountryId(rs.getInt("countryId"));

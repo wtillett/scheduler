@@ -7,9 +7,12 @@ package scheduler.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import scheduler.database.Database;
 
 /**
  *
@@ -109,7 +112,7 @@ public class CityDao implements Dao<City> {
         }
     }
     
-    private City extractCityFromResultSet(ResultSet rs) {
+    private City extractCityFromResultSet(ResultSet rs) throws SQLException {
         City city = new City();
         city.setCityId(rs.getInt("cityId"));
         city.setCity(rs.getString("city"));

@@ -6,7 +6,6 @@
 package scheduler.model;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  *
@@ -14,7 +13,7 @@ import java.util.Optional;
  */
 public interface Dao<T> {
 
-    <T> t get(int id);
+    T get(int id);
 
     List<T> getAll();
 

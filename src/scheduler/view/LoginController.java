@@ -19,8 +19,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import scheduler.model.CustomerDAO;
-import scheduler.model.UserDAO;
+import scheduler.model.CustomerDao;
+import scheduler.model.UserDao;
 
 /**
  *
@@ -39,15 +39,15 @@ public class LoginController implements Initializable {
     @FXML
     private Label loginLabel;
 
-    CustomerDAO cDAO;
-    UserDAO uDAO;
+    CustomerDao cDao;
+    UserDao uDao;
     Connection conn;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         conn = Database.getConnection();
-        cDAO = new CustomerDAO(conn);
-        uDAO = new UserDAO(conn);
+        cDao = new CustomerDao(conn);
+        uDao = new UserDao(conn);
     }
 
     @FXML
