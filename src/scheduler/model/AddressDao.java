@@ -10,28 +10,43 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import java.util.ArrayList;
+import java.util.List;
+import scheduler.database.Database;
 
 /**
  *
  * @author Will Tillett
  */
-public class AddressDao {
+public class AddressDao implements Dao<Address> {
 
     private final Connection conn;
     private static Timestamp now;
+
+    private static final String DELETE
+            = "DELETE FROM address WHERE addressId = ?";
+    private static final String GET_ALL
+            = "SELECT * FROM address ORDER BY addressId";
+    private static final String GET
+            = "SELECT * FROM address WHERE addressId = ?";
+    private static final String INSERT
+            = "INSERT INTO address (address, address2, cityId, postalCode "
+            + "phone, createDate, createdBy, lastUpdate, lastUpdateBy) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE
+            = "UPDATE address SET address = ?, address2 = ?, cityId = ?, "
+            + "postalCode = ?, phone = ?, lastUpdate = ?, lastUpdateBy = ? "
+            + "WHERE addressId = ?";
 
     public AddressDao(Connection conn) {
         this.conn = conn;
         this.now = new Timestamp(System.currentTimeMillis());
     }
 
-    public Address getAddress(int addressId) {
-        final String query = "SELECT * FROM address "
-                + "WHERE addressId = ?";
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setInt(1, addressId);
+    @Override
+    public Address get(int id) {
+        try (PreparedStatement ps = conn.prepareStatement(GET)) {
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return extractAddressFromResultSet(rs);
@@ -42,20 +57,67 @@ public class AddressDao {
         return null;
     }
 
-    public ObservableList<Address> getAllAddresses() {
-        final String query = "SELECT * FROM address";
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
+    @Override
+    public List<Address> getAll() {
+        List<Address> allAddresses = new ArrayList<>();
+        try (PreparedStatement ps = conn.prepareStatement(GET_ALL)) {
             ResultSet rs = ps.executeQuery();
-            ObservableList addresses = FXCollections.observableArrayList();
             while (rs.next()) {
-                Address address = extractAddressFromResultSet(rs);
-                addresses.add(address);
+                allAddresses.add(extractAddressFromResultSet(rs));
             }
-            return addresses;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("getAllAddresses: " + e.getMessage());
         }
-        return null;
+        return allAddresses;
+    }
+
+    @Override
+    public int insert(Address address) {
+        int result = 0;
+        try (PreparedStatement ps = conn.prepareStatement(INSERT)) {
+            ps.setString(1, address.getAddress().getValue());
+            ps.setString(2, address.getAddress2().getValue());
+            ps.setInt(3, address.getCityId().getValue());
+            ps.setString(4, address.getPostalCode().getValue());
+            ps.setString(5, address.getPhone().getValue());
+            ps.setTimestamp(6, now);
+            ps.setString(7, Database.getCurrentUser());
+            ps.setTimestamp(8, now);
+            ps.setString(9, Database.getCurrentUser());
+            result = ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("insertAddress: " + e.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    public int update(Address address) {
+        int result = 0;
+        try (PreparedStatement ps = conn.prepareStatement(UPDATE)) {
+            ps.setString(1, address.getAddress().getValue());
+            ps.setString(2, address.getAddress2().getValue());
+            ps.setInt(3, address.getCityId().getValue());
+            ps.setString(4, address.getPostalCode().getValue());
+            ps.setString(5, address.getPhone().getValue());
+            ps.setTimestamp(6, now);
+            ps.setString(7, Database.getCurrentUser());
+            ps.setInt(8, address.getAddressId().getValue());
+            result = ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("updateAddress: " + e.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    public void delete(Address address) {
+        try (PreparedStatement ps = conn.prepareStatement(DELETE)) {
+            ps.setInt(1, address.getAddressId().getValue());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("deleteAddress: " + e.getMessage());
+        }
     }
 
     private Address extractAddressFromResultSet(ResultSet rs) throws SQLException {
