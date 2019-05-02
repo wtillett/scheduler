@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 /**
@@ -21,7 +19,7 @@ import javax.sql.DataSource;
  */
 public abstract class Database {
 
-    public static String currentUser;
+    private static String currentUser;
 
     public static DataSource getDataSource() {
         Properties properties = new Properties();

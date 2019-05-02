@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -70,18 +71,25 @@ public class LoginController implements Initializable {
     private void login(String userName, String password) {
         if (checkCredentials(userName, password)) {
             Database.setCurrentUser(userName);
+            ObservableList<Customer> customers = cDAO.getAllCustomers();
+            for (Customer c : customers) {
+                System.out.println(c.getCustomerName().getValue());
+            }
+            Customer cc = customers.get(0);
+            cc.setCustomerName("Bill Phillips");
+            cc.setCity("Cairo");
+            System.out.println("cityId: " + cc.getCityId());
+            System.out.println(cDAO.insertCustomer(cc));
+            System.out.println("cityId: " + cc.getCityId());
+
+            customers = cDAO.getAllCustomers();
+            for (Customer c : customers) {
+                System.out.println(c.getCustomerName().getValue());
+            }
+        } else {
+            System.out.println("Incorrect login information");
         }
         // TODO: Finish login method
-        ObservableList<Customer> customers = cDAO.getAllCustomers();
-        for (Customer c : customers) {
-            System.out.println(c.getCustomerName().getValue());
-        }
-        cDAO.insertCustomer(customers.get(0));
-        
-        customers = cDAO.getAllCustomers();
-        for (Customer c : customers) {
-            System.out.println(c.getCustomerName().getValue());
-        }
     }
 
     private boolean checkCredentials(String userName, String password) {
