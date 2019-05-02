@@ -10,13 +10,12 @@ import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  *
  * @author Will Tillett
  */
-public class CityDAO implements Dao<City> {
+public class CityDao implements Dao<City> {
     
     private final Connection conn;
     private static Timestamp now;
@@ -30,7 +29,7 @@ public class CityDAO implements Dao<City> {
             + "countryId = ?, createDate = ?, createdBy = ?, lastUpdate = ?, "
             + "lastUpdateBy = ? WHERE cityId = ?";
         
-    public CityDAO(Connection conn) {
+    public CityDao(Connection conn) {
         this.conn = conn;
         this.now = new Timestamp(System.currentTimeMillis());
     }

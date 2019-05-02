@@ -17,57 +17,58 @@ import javafx.collections.ObservableList;
  *
  * @author Will Tillett
  */
-public class AddressDAO {
+public class CustomerDao {
 
     private final Connection conn;
     private static Timestamp now;
 
-    public AddressDAO(Connection conn) {
+    public CustomerDao(Connection conn) {
         this.conn = conn;
         this.now = new Timestamp(System.currentTimeMillis());
     }
 
-    public Address getAddress(int addressId) {
-        final String query = "SELECT * FROM address "
-                + "WHERE addressId = ?";
+    public Customer getCustomer(int customerId) {
+        final String query = "SELECT * FROM customer "
+                + "WHERE customerId = ?";
         try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setInt(1, addressId);
+            ps.setInt(1, customerId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return extractAddressFromResultSet(rs);
+                return extractCustomerFromResultSet(rs);
             }
         } catch (SQLException e) {
-            System.out.println("getAddress: " + e.getMessage());
+            System.out.println("getCustomer: " + e.getMessage());
         }
         return null;
     }
 
-    public ObservableList<Address> getAllAddresses() {
-        final String query = "SELECT * FROM address";
+    public ObservableList<Customer> getAllCustomers() {
+        final String query = "SELECT * FROM customer";
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
-            ObservableList addresses = FXCollections.observableArrayList();
+            ObservableList customers = FXCollections.observableArrayList();
             while (rs.next()) {
-                Address address = extractAddressFromResultSet(rs);
-                addresses.add(address);
+                Customer customer = extractCustomerFromResultSet(rs);
+                customers.add(customer);
             }
-            return addresses;
+            return customers;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return null;
     }
 
-    private Address extractAddressFromResultSet(ResultSet rs) throws SQLException {
-        Address address = new Address();
+    public boolean insertCustomer(Customer customer) {
+        return true;
+    }
 
-        address.setAddressId(rs.getInt("addressId"));
-        address.setAddress(rs.getString("address"));
-        address.setAddress2(rs.getString("address2"));
-        address.setCityId(rs.getInt("cityId"));
-        address.setPostalCode(rs.getString("postalCode"));
-        address.setPhone(rs.getString("phone"));
+    private Customer extractCustomerFromResultSet(ResultSet rs) throws SQLException {
+        Customer customer = new Customer();
 
-        return address;
+        customer.setCustomerId(rs.getInt("customerId"));
+        customer.setCustomerName(rs.getString("customerName"));
+        customer.setAddressId(rs.getInt("addressId"));
+
+        return customer;
     }
 }

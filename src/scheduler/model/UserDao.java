@@ -14,11 +14,11 @@ import java.sql.SQLException;
  *
  * @author Will Tillett
  */
-public class UserDAO {
+public class UserDao {
     
     private final Connection conn;
     
-    public UserDAO(Connection conn) {
+    public UserDao(Connection conn) {
         this.conn = conn;
     }
     
