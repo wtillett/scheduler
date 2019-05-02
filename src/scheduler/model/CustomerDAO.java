@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import scheduler.database.Database;
 
 /**
  *
@@ -30,9 +29,6 @@ public class CustomerDAO {
 
     public Customer getCustomer(int customerId) {
         final String query = "SELECT * FROM customer "
-                + "JOIN address ON customer.addressId = address.addressId "
-                + "JOIN city ON address.cityId = city.cityId "
-                + "JOIN country ON city.countryId = country.countryId "
                 + "WHERE customerId = ?";
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, customerId);
@@ -47,10 +43,7 @@ public class CustomerDAO {
     }
 
     public ObservableList<Customer> getAllCustomers() {
-        final String query = "SELECT * FROM customer "
-                + "JOIN address ON customer.addressId = address.addressId "
-                + "JOIN city ON address.cityId = city.cityId "
-                + "JOIN country ON city.countryId = country.countryId";
+        final String query = "SELECT * FROM customer";
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
             ObservableList customers = FXCollections.observableArrayList();
@@ -66,129 +59,7 @@ public class CustomerDAO {
     }
 
     public boolean insertCustomer(Customer customer) {
-        checkCountry(customer);
-        checkCity(customer);
-        checkAddress(customer);
-        String customerName = customer.getCustomerName().getValue();
-        int addressId = customer.getAddressId().getValue();
-        int result = 0;
-        String query = "INSERT INTO customer (customerName, addressId, "
-                + "active, createDate, createdBy, lastUpdate, lastUpdateBy) "
-                + "SELECT ?, ?, 1, ?, ?, ?, ? FROM DUAL "
-                + "WHERE NOT EXISTS "
-                + "(SELECT customerName FROM customer WHERE customerName = ?)";
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setString(1, customerName);
-            ps.setInt(2, addressId);
-            ps.setTimestamp(3, now);
-            ps.setString(4, Database.getCurrentUser());
-            ps.setTimestamp(5, now);
-            ps.setString(6, Database.getCurrentUser());
-            ps.setString(7, customerName);
-            result = ps.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("insertCustomer: " + e.getMessage());
-        }
-        return result == 1;
-    }
-
-    private void checkCountry(Customer customer) {
-        String country = customer.getCountry().getValue();
-        String query = "INSERT INTO country (country, "
-                + "createDate, createdBy, lastUpdate, lastUpdateBy) "
-                + "SELECT ?, ?, ?, ?, ? FROM DUAL "
-                + "WHERE NOT EXISTS "
-                + "(SELECT country FROM country WHERE country = ?)";
-        int result = 0;
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setString(1, country);
-            ps.setTimestamp(2, now);
-            ps.setString(3, Database.getCurrentUser());
-            ps.setTimestamp(4, now);
-            ps.setString(5, Database.getCurrentUser());
-            ps.setString(6, country);
-            result = ps.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("checkCountry: " + e.getMessage());
-        }
-        if (result == 1) {
-            String getNewId = "SELECT countryId FROM country "
-                    + "WHERE country = ?";
-            try (PreparedStatement ps = conn.prepareStatement(getNewId)) {
-                ps.setString(1, country);
-                ResultSet rs = ps.executeQuery();
-                if (rs.next()) {
-                    customer.setCountryId(rs.getInt("countryId"));
-                }
-            } catch (SQLException e) {
-                System.out.println("updateCountryId: " + e.getMessage());
-            }
-        }
-    }
-
-    private void checkCity(Customer customer) {
-        String city = customer.getCity().getValue();
-        int countryId = customer.getCountryId().getValue();
-        String query = "INSERT INTO city (city, countryId, "
-                + "createDate, createdBy, lastUpdate, lastUpdateBy) "
-                + "SELECT ?, ?, ?, ?, ?, ? FROM DUAL "
-                + "WHERE NOT EXISTS "
-                + "(SELECT city FROM city WHERE city = ?)";
-        int result = 0;
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setString(1, city);
-            ps.setInt(2, countryId);
-            ps.setTimestamp(3, now);
-            ps.setString(4, Database.getCurrentUser());
-            ps.setTimestamp(5, now);
-            ps.setString(6, Database.getCurrentUser());
-            ps.setString(7, city);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("checkCity: " + e.getMessage());
-        }
-        if (result == 1) {
-            String getNewId = "SELECT cityId FROM city "
-                    + "WHERE city = ?";
-            try (PreparedStatement ps = conn.prepareStatement(getNewId)) {
-                ps.setString(1, city);
-                ResultSet rs = ps.executeQuery();
-                if (rs.next()) {
-                    customer.setCityId(rs.getInt("cityId"));
-                }
-            } catch (SQLException e) {
-                System.out.println("updateCityId: " + e.getMessage());
-            }
-        }
-    }
-
-    private void checkAddress(Customer customer) {
-        String address = customer.getAddress().getValue();
-        String address2 = customer.getAddress2().getValue();
-        String postalCode = customer.getPostalCode().getValue();
-        String phone = customer.getPhone().getValue();
-        int cityId = customer.getCityId().getValue();
-        String query = "INSERT INTO address "
-                + "(address, address2, postalCode, phone, cityId, "
-                + "createDate, createdBy, lastUpdate, lastUpdateBy) "
-                + "SELECT ?, ?, ?, ?, ?, ?, ?, ?, ? FROM DUAL "
-                + "WHERE NOT EXISTS "
-                + "(SELECT address FROM address WHERE address = ?)";
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setString(1, address);
-            ps.setString(2, address2);
-            ps.setString(3, postalCode);
-            ps.setString(4, phone);
-            ps.setInt(5, cityId);
-            ps.setTimestamp(6, now);
-            ps.setString(7, Database.getCurrentUser());
-            ps.setTimestamp(8, now);
-            ps.setString(9, Database.getCurrentUser());
-            ps.setString(10, address);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("checkAddress: " + e.getMessage());
-        }
+        return true;
     }
 
     private Customer extractCustomerFromResultSet(ResultSet rs) throws SQLException {
@@ -197,14 +68,6 @@ public class CustomerDAO {
         customer.setCustomerId(rs.getInt("customerId"));
         customer.setCustomerName(rs.getString("customerName"));
         customer.setAddressId(rs.getInt("addressId"));
-        customer.setAddress(rs.getString("address"));
-        customer.setAddress2(rs.getString("address2"));
-        customer.setCityId(rs.getInt("cityId"));
-        customer.setPostalCode(rs.getString("postalCode"));
-        customer.setPhone(rs.getString("phone"));
-        customer.setCity(rs.getString("city"));
-        customer.setCountryId(rs.getInt("countryId"));
-        customer.setCountry(rs.getString("country"));
 
         return customer;
     }
