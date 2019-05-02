@@ -27,6 +27,8 @@ public class CountryDao implements Dao<Country> {
             = "DELETE FROM country WHERE countryId = ?";
     private static final String GET_ALL
             = "SELECT * FROM country ORDER BY countryId";
+    private static final String GET_ID
+            = "SELECT countryId FROM country WHERE country = ?";
     private static final String GET
             = "SELECT * FROM country WHERE countryId = ?";
     private static final String INSERT
@@ -54,6 +56,21 @@ public class CountryDao implements Dao<Country> {
             System.out.println("getCountry: " + e.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public int getId(String name) {
+        int id = -1;
+        try (PreparedStatement ps = conn.prepareStatement(GET_ID)) {
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("countryId");
+            }
+        } catch (SQLException e) {
+            System.out.println("getCountryId: " + e.getMessage());
+        }
+        return id;
     }
 
     @Override

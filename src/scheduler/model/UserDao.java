@@ -19,25 +19,27 @@ import scheduler.database.Database;
  * @author Will Tillett
  */
 public class UserDao implements Dao<User> {
-    
+
     private final Connection conn;
     private static Timestamp now;
-    
-    private static final String DELETE = 
-            "DELETE FROM user WHERE userId = ?";
-    private static final String GET_ALL = 
-            "SELECT * FROM user ORDER BY userId";
-    private static final String GET = 
-            "SELECT * FROM user WHERE userId = ?";
-    private static final String INSERT = 
-            "INSERT INTO user (userName, password, active, "
+
+    private static final String DELETE
+            = "DELETE FROM user WHERE userId = ?";
+    private static final String GET_ALL
+            = "SELECT * FROM user ORDER BY userId";
+    private static final String GET_ID
+            = "SELECT userId FROM user WHERE userName = ?";
+    private static final String GET
+            = "SELECT * FROM user WHERE userId = ?";
+    private static final String INSERT
+            = "INSERT INTO user (userName, password, active, "
             + "createDate, createdBy, lastUpdate, lastUpdateBy) "
             + "VALUES (?, ?, 1, ?, ?, ?, ?)";
-    private static final String UPDATE = 
-            "UPDATE user SET userName = ?, password = ?, "
+    private static final String UPDATE
+            = "UPDATE user SET userName = ?, password = ?, "
             + "lastUpdate = ?, lastUpdateBy = ? "
             + "WHERE userId = ?";
-    
+
     public UserDao(Connection conn) {
         this.conn = conn;
         this.now = new Timestamp(System.currentTimeMillis());
@@ -48,12 +50,28 @@ public class UserDao implements Dao<User> {
         try (PreparedStatement ps = conn.prepareStatement(GET)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            if (rs.next())
+            if (rs.next()) {
                 return extractUserFromResultSet(rs);
+            }
         } catch (SQLException e) {
             System.out.println("getUser: " + e.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public int getId(String name) {
+        int id = -1;
+        try (PreparedStatement ps = conn.prepareStatement(GET_ID)) {
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("userId");
+            }
+        } catch (SQLException e) {
+            System.out.println("getUserId: " + e.getMessage());
+        }
+        return id;
     }
 
     @Override
@@ -115,12 +133,12 @@ public class UserDao implements Dao<User> {
 
     private User extractUserFromResultSet(ResultSet rs) throws SQLException {
         User user = new User();
-        
+
         user.setUserId(rs.getInt("userId"));
         user.setUserName(rs.getString("userName"));
         user.setPassword(rs.getString("password"));
-        
+
         return user;
     }
-    
+
 }

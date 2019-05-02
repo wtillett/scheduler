@@ -27,6 +27,8 @@ public class CityDao implements Dao<City> {
             = "DELETE FROM city WHERE cityId = ?";
     private static final String GET_ALL
             = "SELECT * FROM city ORDER BY cityId";
+    private static final String GET_ID
+            = "SELECT cityId FROM city WHERE city = ?";
     private static final String GET
             = "SELECT * FROM city WHERE cityId = ?";
     private static final String INSERT
@@ -55,6 +57,21 @@ public class CityDao implements Dao<City> {
             System.out.println("getCity: " + e.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public int getId(String name) {
+        int id = -1;
+        try (PreparedStatement ps = conn.prepareStatement(GET_ID)) {
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("cityId");
+            }
+        } catch (SQLException e) {
+            System.out.println("getCityId: " + e.getMessage());
+        }
+        return id;
     }
 
     @Override

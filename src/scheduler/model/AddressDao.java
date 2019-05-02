@@ -27,6 +27,8 @@ public class AddressDao implements Dao<Address> {
             = "DELETE FROM address WHERE addressId = ?";
     private static final String GET_ALL
             = "SELECT * FROM address ORDER BY addressId";
+    private static final String GET_ID
+            = "SELECT addressId FROM address WHERE address = ?";
     private static final String GET
             = "SELECT * FROM address WHERE addressId = ?";
     private static final String INSERT
@@ -55,6 +57,21 @@ public class AddressDao implements Dao<Address> {
             System.out.println("getAddress: " + e.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public int getId(String name) {
+        int id = -1;
+        try (PreparedStatement ps = conn.prepareStatement(GET_ID)) {
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("addressId");
+            }
+        } catch (SQLException e) {
+            System.out.println("getAddressId: " + e.getMessage());
+        }
+        return id;
     }
 
     @Override

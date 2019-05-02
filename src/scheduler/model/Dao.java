@@ -14,6 +14,8 @@ import java.util.List;
 public interface Dao<T> {
 
     T get(int id);
+    
+    int getId(String name);
 
     List<T> getAll();
 

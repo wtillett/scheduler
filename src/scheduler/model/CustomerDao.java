@@ -10,28 +10,45 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import java.util.ArrayList;
+import java.util.List;
+import scheduler.database.Database;
 
 /**
  *
  * @author Will Tillett
  */
-public class CustomerDao {
+public class CustomerDao implements Dao<Customer> {
 
     private final Connection conn;
     private static Timestamp now;
+
+    private static final String DELETE
+            = "DELETE FROM customer WHERE customerId = ?";
+    private static final String GET_ALL
+            = "SELECT * FROM customer ORDER BY customerId";
+    private static final String GET_ID
+            = "SELECT customerId FROM customer WHERE customerName = ?";
+    private static final String GET
+            = "SELECT * FROM customer WHERE customerId = ?";
+    private static final String INSERT
+            = "INSERT INTO customer (customerName, addressId, active, "
+            + "createDate, createdBy, lastUpdate, lastUpdateBy) "
+            + "VALUES (?, ?, 1, ?, ?, ?, ?)";
+    private static final String UPDATE
+            = "UPDATE customer SET customerName = ?, addressId = ?, "
+            + "lastUpdate = ?, lastUpdateBy = ? "
+            + "WHERE customerId = ?";
 
     public CustomerDao(Connection conn) {
         this.conn = conn;
         this.now = new Timestamp(System.currentTimeMillis());
     }
 
-    public Customer getCustomer(int customerId) {
-        final String query = "SELECT * FROM customer "
-                + "WHERE customerId = ?";
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setInt(1, customerId);
+    @Override
+    public Customer get(int id) {
+        try (PreparedStatement ps = conn.prepareStatement(GET)) {
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return extractCustomerFromResultSet(rs);
@@ -42,24 +59,76 @@ public class CustomerDao {
         return null;
     }
 
-    public ObservableList<Customer> getAllCustomers() {
-        final String query = "SELECT * FROM customer";
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
+    @Override
+    public int getId(String name) {
+        int id = -1;
+        try (PreparedStatement ps = conn.prepareStatement(GET_ID)) {
+            ps.setString(1, name);
             ResultSet rs = ps.executeQuery();
-            ObservableList customers = FXCollections.observableArrayList();
-            while (rs.next()) {
-                Customer customer = extractCustomerFromResultSet(rs);
-                customers.add(customer);
+            if (rs.next()) {
+                id = rs.getInt("customerId");
             }
-            return customers;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("getCustomerId: " + e.getMessage());
         }
-        return null;
+        return id;
     }
 
-    public boolean insertCustomer(Customer customer) {
-        return true;
+    @Override
+    public List<Customer> getAll() {
+        List<Customer> allCustomers = new ArrayList<>();
+        try (PreparedStatement ps = conn.prepareStatement(GET_ALL)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                allCustomers.add(extractCustomerFromResultSet(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("getAllCustomers: " + e.getMessage());
+        }
+        return allCustomers;
+    }
+
+    @Override
+    public int insert(Customer c) {
+        int result = 0;
+        try (PreparedStatement ps = conn.prepareStatement(INSERT)) {
+            ps.setString(1, c.getCustomerName().getValue());
+            ps.setInt(2, c.getAddressId().getValue());
+            ps.setTimestamp(3, now);
+            ps.setString(4, Database.getCurrentUser());
+            ps.setTimestamp(5, now);
+            ps.setString(6, Database.getCurrentUser());
+            result = ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Customer: " + e.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    public int update(Customer c) {
+        int result = 0;
+        try (PreparedStatement ps = conn.prepareStatement(UPDATE)) {
+            ps.setString(1, c.getCustomerName().getValue());
+            ps.setInt(2, c.getAddressId().getValue());
+            ps.setTimestamp(3, now);
+            ps.setString(4, Database.getCurrentUser());
+            ps.setInt(5, c.getCustomerId().getValue());
+            result = ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("updateCustomer: " + e.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    public void delete(Customer c) {
+        try (PreparedStatement ps = conn.prepareStatement(DELETE)) {
+            ps.setInt(1, c.getCustomerId().getValue());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("deleteCustomer: " + e.getMessage());
+        }
     }
 
     private Customer extractCustomerFromResultSet(ResultSet rs) throws SQLException {

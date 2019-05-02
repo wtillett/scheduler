@@ -19,6 +19,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import scheduler.model.AddressDao;
+import scheduler.model.CityDao;
+import scheduler.model.Country;
+import scheduler.model.CountryDao;
 import scheduler.model.CustomerDao;
 import scheduler.model.UserDao;
 
@@ -68,8 +72,7 @@ public class LoginController implements Initializable {
                     + Database.getCurrentUser());
         } else {
             System.out.println("Incorrect login information");
-        }
-        
+        }        
     }
 
     private boolean checkCredentials(String userName, String password) {
