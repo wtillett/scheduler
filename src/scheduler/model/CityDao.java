@@ -20,14 +20,18 @@ public class CityDao implements Dao<City> {
     private final Connection conn;
     private static Timestamp now;
     
-    private static final String DELETE = "DELETE FROM city WHERE cityId = ?";
-    private static final String GET_ALL = "SELECT * FROM city ORDER BY cityId";
-    private static final String GET = "SELECT * FROM city WHERE cityId = ?";
-    private static final String INSERT = "INSERT INTO city VALUES "
-            + "(?, ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE = "UPDATE city SET city = ?, "
-            + "countryId = ?, createDate = ?, createdBy = ?, lastUpdate = ?, "
-            + "lastUpdateBy = ? WHERE cityId = ?";
+    private static final String DELETE = 
+            "DELETE FROM city WHERE cityId = ?";
+    private static final String GET_ALL = 
+            "SELECT * FROM city ORDER BY cityId";
+    private static final String GET = 
+            "SELECT * FROM city WHERE cityId = ?";
+    private static final String INSERT = 
+            "INSERT INTO city VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE = 
+            "UPDATE city SET city = ?, "
+            + "countryId = ?, lastUpdate = ?, lastUpdateBy = ? "
+            + "WHERE cityId = ?";
         
     public CityDao(Connection conn) {
         this.conn = conn;
@@ -87,9 +91,7 @@ public class CityDao implements Dao<City> {
             ps.setInt(2, t.getCountryId().getValue());
             ps.setTimestamp(3, now);
             ps.setString(4, Database.getCurrentUser());
-            ps.setTimestamp(5, now);
-            ps.setString(6, Database.getCurrentUser());
-            ps.setInt(7, t.getCityId().getValue());
+            ps.setInt(5, t.getCityId().getValue());
             result = ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("updateCity: " + e.getMessage());
