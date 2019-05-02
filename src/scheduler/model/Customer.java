@@ -24,6 +24,11 @@ public class Customer {
     public Customer() {
     }
 
+    public Customer(String customerName, int addressId) {
+        setCustomerName(customerName);
+        setAddressId(addressId);
+    }
+
     public Customer(int customerId, String name, int addressId,
             String address, String address2, int cityId, String postalCode,
             String phone, String city, int countryId, String country) {

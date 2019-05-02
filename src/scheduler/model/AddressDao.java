@@ -32,7 +32,7 @@ public class AddressDao implements Dao<Address> {
     private static final String GET
             = "SELECT * FROM address WHERE addressId = ?";
     private static final String INSERT
-            = "INSERT INTO address (address, address2, cityId, postalCode "
+            = "INSERT INTO address (address, address2, cityId, postalCode, "
             + "phone, createDate, createdBy, lastUpdate, lastUpdateBy) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE

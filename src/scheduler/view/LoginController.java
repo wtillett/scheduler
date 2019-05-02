@@ -19,10 +19,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import scheduler.model.Address;
 import scheduler.model.AddressDao;
+import scheduler.model.City;
 import scheduler.model.CityDao;
 import scheduler.model.Country;
 import scheduler.model.CountryDao;
+import scheduler.model.Customer;
 import scheduler.model.CustomerDao;
 import scheduler.model.UserDao;
 
@@ -70,6 +73,22 @@ public class LoginController implements Initializable {
             Database.setCurrentUser(userName);
             System.out.println("Successfully logged in as: " 
                     + Database.getCurrentUser());
+            CountryDao countryDao = new CountryDao(conn);
+            CityDao cityDao = new CityDao(conn);
+            AddressDao aDao = new AddressDao(conn);
+            CustomerDao cDao = new CustomerDao(conn);
+            for (Customer c : cDao.getAll()) {
+                System.out.println(c.getCustomerName().getValue());
+            }
+            countryDao.insert(new Country("Ireland"));
+            cityDao.insert(new City("Dublin", countryDao.getId("Ireland")));
+            Address address = new Address("444 Real Ave", "", cityDao.getId("Dublin"),
+                "12345", "8002888739");
+            aDao.insert(address);
+            cDao.insert(new Customer("Tom Jones", aDao.getId("444 Real Ave")));
+            for (Customer c : cDao.getAll()) {
+                System.out.println(c.getCustomerName().getValue());
+            }
         } else {
             System.out.println("Incorrect login information");
         }        
