@@ -34,7 +34,9 @@ public class CityDao implements Dao<City> {
     private static final String INSERT
             = "INSERT INTO city (city, countryId, createDate, createdBy, "
             + "lastUpdate, lastUpdateBy) "
-            + "VALUES (?, ?, ?, ?, ?, ?)";
+            + "SELECT ?, ?, ?, ?, ?, ? FROM DUAL "
+            + "WHERE NOT EXISTS "
+            + "(SELECT city FROM city WHERE city = ?)";
     private static final String UPDATE
             = "UPDATE city SET city = ?, "
             + "countryId = ?, lastUpdate = ?, lastUpdateBy = ? "
@@ -98,6 +100,7 @@ public class CityDao implements Dao<City> {
             ps.setString(4, Database.getCurrentUser());
             ps.setTimestamp(5, now);
             ps.setString(6, Database.getCurrentUser());
+            ps.setString(7, city.getCity().getValue());
             result = ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("insertCity: " + e.getMessage());

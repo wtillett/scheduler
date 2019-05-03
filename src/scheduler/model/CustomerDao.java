@@ -34,7 +34,9 @@ public class CustomerDao implements Dao<Customer> {
     private static final String INSERT
             = "INSERT INTO customer (customerName, addressId, active, "
             + "createDate, createdBy, lastUpdate, lastUpdateBy) "
-            + "VALUES (?, ?, 1, ?, ?, ?, ?)";
+            + "SELECT ?, ?, 1, ?, ?, ?, ? FROM DUAL "
+            + "WHERE NOT EXISTS "
+            + "(SELECT customerName FROM customer WHERE customerName = ?)";
     private static final String UPDATE
             = "UPDATE customer SET customerName = ?, addressId = ?, "
             + "lastUpdate = ?, lastUpdateBy = ? "
@@ -98,6 +100,7 @@ public class CustomerDao implements Dao<Customer> {
             ps.setString(4, Database.getCurrentUser());
             ps.setTimestamp(5, now);
             ps.setString(6, Database.getCurrentUser());
+            ps.setString(7, c.getCustomerName().getValue());
             result = ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Customer: " + e.getMessage());

@@ -76,7 +76,6 @@ public class LoginController implements Initializable {
             CountryDao countryDao = new CountryDao(conn);
             CityDao cityDao = new CityDao(conn);
             AddressDao aDao = new AddressDao(conn);
-            CustomerDao cDao = new CustomerDao(conn);
             for (Customer c : cDao.getAll()) {
                 System.out.println(c.getCustomerName().getValue());
             }

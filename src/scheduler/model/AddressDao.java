@@ -34,7 +34,9 @@ public class AddressDao implements Dao<Address> {
     private static final String INSERT
             = "INSERT INTO address (address, address2, cityId, postalCode, "
             + "phone, createDate, createdBy, lastUpdate, lastUpdateBy) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "SELECT ?, ?, ?, ?, ?, ?, ?, ?, ? FROM DUAL "
+            + "WHERE NOT EXISTS "
+            + "(SELECT address FROM address WHERE address = ?)";
     private static final String UPDATE
             = "UPDATE address SET address = ?, address2 = ?, cityId = ?, "
             + "postalCode = ?, phone = ?, lastUpdate = ?, lastUpdateBy = ? "
@@ -101,6 +103,7 @@ public class AddressDao implements Dao<Address> {
             ps.setString(7, Database.getCurrentUser());
             ps.setTimestamp(8, now);
             ps.setString(9, Database.getCurrentUser());
+            ps.setString(10, address.getAddress().getValue());
             result = ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("insertAddress: " + e.getMessage());

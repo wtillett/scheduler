@@ -34,7 +34,9 @@ public class UserDao implements Dao<User> {
     private static final String INSERT
             = "INSERT INTO user (userName, password, active, "
             + "createDate, createdBy, lastUpdate, lastUpdateBy) "
-            + "VALUES (?, ?, 1, ?, ?, ?, ?)";
+            + "SELECT ?, ?, 1, ?, ?, ?, ? FROM DUAL "
+            + "WHERE NOT EXISTS "
+            + "(SELECT userName FROM user WHERE userName = ?)";
     private static final String UPDATE
             = "UPDATE user SET userName = ?, password = ?, "
             + "lastUpdate = ?, lastUpdateBy = ? "
@@ -98,6 +100,7 @@ public class UserDao implements Dao<User> {
             ps.setString(4, Database.getCurrentUser());
             ps.setTimestamp(5, now);
             ps.setString(6, Database.getCurrentUser());
+            ps.setString(7, user.getUserName().getValue());
             result = ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("insertUser: " + e.getMessage());

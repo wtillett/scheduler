@@ -34,7 +34,9 @@ public class CountryDao implements Dao<Country> {
     private static final String INSERT
             = "INSERT INTO country (country, createDate, createdBy, "
             + "lastUpdate, lastUpdateBy) "
-            + "VALUES (?, ?, ?, ?, ?)";
+            + "SELECT ?, ?, ?, ?, ? FROM DUAL "
+            + "WHERE NOT EXISTS "
+            + "(SELECT country FROM country WHERE country = ?)";
     private static final String UPDATE
             = "UPDATE country SET country = ?, lastUpdate = ?, lastUpdateBy = ? "
             + "WHERE countryId = ?";
@@ -96,6 +98,7 @@ public class CountryDao implements Dao<Country> {
             ps.setString(3, Database.getCurrentUser());
             ps.setTimestamp(4, now);
             ps.setString(5, Database.getCurrentUser());
+            ps.setString(6, country.getCountry().getValue());
             result = ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("insertCountry: " + e.getMessage());
