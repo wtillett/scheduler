@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package scheduler.model;
+package scheduler.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,51 +12,52 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import scheduler.database.Database;
+import scheduler.Database;
+import scheduler.model.City;
 
 /**
  *
  * @author Will Tillett
  */
-public class CustomerDao implements Dao<Customer> {
+public class CityDao implements Dao<City> {
 
     private final Connection conn;
     private static Timestamp now;
 
     private static final String DELETE
-            = "DELETE FROM customer WHERE customerId = ?";
+            = "DELETE FROM city WHERE cityId = ?";
     private static final String GET_ALL
-            = "SELECT * FROM customer ORDER BY customerId";
+            = "SELECT * FROM city ORDER BY cityId";
     private static final String GET_ID
-            = "SELECT customerId FROM customer WHERE customerName = ?";
+            = "SELECT cityId FROM city WHERE city = ?";
     private static final String GET
-            = "SELECT * FROM customer WHERE customerId = ?";
+            = "SELECT * FROM city WHERE cityId = ?";
     private static final String INSERT
-            = "INSERT INTO customer (customerName, addressId, active, "
-            + "createDate, createdBy, lastUpdate, lastUpdateBy) "
-            + "SELECT ?, ?, 1, ?, ?, ?, ? FROM DUAL "
+            = "INSERT INTO city (city, countryId, createDate, createdBy, "
+            + "lastUpdate, lastUpdateBy) "
+            + "SELECT ?, ?, ?, ?, ?, ? FROM DUAL "
             + "WHERE NOT EXISTS "
-            + "(SELECT customerName FROM customer WHERE customerName = ?)";
+            + "(SELECT city FROM city WHERE city = ?)";
     private static final String UPDATE
-            = "UPDATE customer SET customerName = ?, addressId = ?, "
-            + "lastUpdate = ?, lastUpdateBy = ? "
-            + "WHERE customerId = ?";
+            = "UPDATE city SET city = ?, "
+            + "countryId = ?, lastUpdate = ?, lastUpdateBy = ? "
+            + "WHERE cityId = ?";
 
-    public CustomerDao(Connection conn) {
+    public CityDao(Connection conn) {
         this.conn = conn;
         this.now = new Timestamp(System.currentTimeMillis());
     }
 
     @Override
-    public Customer get(int id) {
+    public City get(int id) {
         try (PreparedStatement ps = conn.prepareStatement(GET)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return extractCustomerFromResultSet(rs);
+                return extractCityFromResultSet(rs);
             }
         } catch (SQLException e) {
-            System.out.println("getCustomer: " + e.getMessage());
+            System.out.println("getCity: " + e.getMessage());
         }
         return null;
     }
@@ -68,79 +69,78 @@ public class CustomerDao implements Dao<Customer> {
             ps.setString(1, name);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                id = rs.getInt("customerId");
+                id = rs.getInt("cityId");
             }
         } catch (SQLException e) {
-            System.out.println("getCustomerId: " + e.getMessage());
+            System.out.println("getCityId: " + e.getMessage());
         }
         return id;
     }
 
     @Override
-    public List<Customer> getAll() {
-        List<Customer> allCustomers = new ArrayList<>();
+    public List<City> getAll() {
+        List<City> allCities = new ArrayList<>();
         try (PreparedStatement ps = conn.prepareStatement(GET_ALL)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                allCustomers.add(extractCustomerFromResultSet(rs));
+                allCities.add(extractCityFromResultSet(rs));
             }
         } catch (SQLException e) {
-            System.out.println("getAllCustomers: " + e.getMessage());
+            System.out.println("getAllCities: " + e.getMessage());
         }
-        return allCustomers;
+        return allCities;
     }
 
     @Override
-    public int insert(Customer c) {
+    public int insert(City city) {
         int result = 0;
         try (PreparedStatement ps = conn.prepareStatement(INSERT)) {
-            ps.setString(1, c.getCustomerName().getValue());
-            ps.setInt(2, c.getAddressId().getValue());
+            ps.setString(1, city.getCity().getValue());
+            ps.setInt(2, city.getCountryId().getValue());
             ps.setTimestamp(3, now);
             ps.setString(4, Database.getCurrentUser());
             ps.setTimestamp(5, now);
             ps.setString(6, Database.getCurrentUser());
-            ps.setString(7, c.getCustomerName().getValue());
+            ps.setString(7, city.getCity().getValue());
             result = ps.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Customer: " + e.getMessage());
+            System.out.println("insertCity: " + e.getMessage());
         }
         return result;
     }
 
     @Override
-    public int update(Customer c) {
+    public int update(City city) {
         int result = 0;
         try (PreparedStatement ps = conn.prepareStatement(UPDATE)) {
-            ps.setString(1, c.getCustomerName().getValue());
-            ps.setInt(2, c.getAddressId().getValue());
+            ps.setString(1, city.getCity().getValue());
+            ps.setInt(2, city.getCountryId().getValue());
             ps.setTimestamp(3, now);
             ps.setString(4, Database.getCurrentUser());
-            ps.setInt(5, c.getCustomerId().getValue());
+            ps.setInt(5, city.getCityId().getValue());
             result = ps.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("updateCustomer: " + e.getMessage());
+            System.out.println("updateCity: " + e.getMessage());
         }
         return result;
     }
 
     @Override
-    public void delete(Customer c) {
+    public void delete(City city) {
         try (PreparedStatement ps = conn.prepareStatement(DELETE)) {
-            ps.setInt(1, c.getCustomerId().getValue());
+            ps.setInt(1, city.getCityId().getValue());
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("deleteCustomer: " + e.getMessage());
+            System.out.println("deleteCity: " + e.getMessage());
         }
     }
 
-    private Customer extractCustomerFromResultSet(ResultSet rs) throws SQLException {
-        Customer customer = new Customer();
+    private City extractCityFromResultSet(ResultSet rs) throws SQLException {
+        City city = new City();
+        city.setCityId(rs.getInt("cityId"));
+        city.setCity(rs.getString("city"));
+        city.setCountryId(rs.getInt("countryId"));
 
-        customer.setCustomerId(rs.getInt("customerId"));
-        customer.setCustomerName(rs.getString("customerName"));
-        customer.setAddressId(rs.getInt("addressId"));
-
-        return customer;
+        return city;
     }
 }

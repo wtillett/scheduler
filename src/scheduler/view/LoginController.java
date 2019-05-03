@@ -5,7 +5,7 @@
  */
 package scheduler.view;
 
-import scheduler.database.Database;
+import scheduler.Database;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,16 +23,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import scheduler.model.Address;
-import scheduler.model.AddressDao;
+import scheduler.dao.AddressDao;
 import scheduler.model.Appointment;
-import scheduler.model.AppointmentDao;
+import scheduler.dao.AppointmentDao;
 import scheduler.model.City;
-import scheduler.model.CityDao;
+import scheduler.dao.CityDao;
 import scheduler.model.Country;
-import scheduler.model.CountryDao;
+import scheduler.dao.CountryDao;
 import scheduler.model.Customer;
-import scheduler.model.CustomerDao;
-import scheduler.model.UserDao;
+import scheduler.dao.CustomerDao;
+import scheduler.dao.UserDao;
 
 /**
  *
@@ -63,6 +64,7 @@ public class LoginController implements Initializable {
 
     @FXML
     private void handleCancelBtn(ActionEvent event) {
+        Platform.exit();
     }
 
     @FXML
