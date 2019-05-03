@@ -11,6 +11,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,6 +23,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import scheduler.model.Address;
 import scheduler.model.AddressDao;
+import scheduler.model.Appointment;
+import scheduler.model.AppointmentDao;
 import scheduler.model.City;
 import scheduler.model.CityDao;
 import scheduler.model.Country;
@@ -71,26 +75,39 @@ public class LoginController implements Initializable {
     private void login(String userName, String password) {
         if (checkCredentials(userName, password)) {
             Database.setCurrentUser(userName);
-            System.out.println("Successfully logged in as: " 
+            System.out.println("Successfully logged in as: "
                     + Database.getCurrentUser());
             CountryDao countryDao = new CountryDao(conn);
             CityDao cityDao = new CityDao(conn);
             AddressDao aDao = new AddressDao(conn);
+            AppointmentDao aptDao = new AppointmentDao(conn);
             for (Customer c : cDao.getAll()) {
                 System.out.println(c.getCustomerName().getValue());
             }
             countryDao.insert(new Country("Ireland"));
             cityDao.insert(new City("Dublin", countryDao.getId("Ireland")));
             Address address = new Address("444 Real Ave", "", cityDao.getId("Dublin"),
-                "12345", "8002888739");
+                    "12345", "8002888739");
             aDao.insert(address);
             cDao.insert(new Customer("Tom Jones", aDao.getId("444 Real Ave")));
             for (Customer c : cDao.getAll()) {
                 System.out.println(c.getCustomerName().getValue());
             }
+            for (Appointment a : aptDao.getAll()) {
+                System.out.println(a.getTitle().getValue());
+            }
+            Appointment apt = new Appointment(cDao.getId("Tom Jones"), "New Appointment",
+                    "It's about lice.", "Home", "Bill Jillers", "www.goatse.cx",
+                    LocalDateTime.of(2019, Month.JULY, 14, 0, 0, 0),
+                    LocalDateTime.of(2019, Month.JULY, 15, 0, 0, 0),
+                    "Informal", uDao.getId(Database.getCurrentUser()));
+            aptDao.insert(apt);
+            for (Appointment a : aptDao.getAll()) {
+                System.out.println(a.getTitle().getValue());
+            }
         } else {
             System.out.println("Incorrect login information");
-        }        
+        }
     }
 
     private boolean checkCredentials(String userName, String password) {

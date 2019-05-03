@@ -34,6 +34,37 @@ public class Appointment {
     public Appointment() {
     }
 
+    public Appointment(int appointmentId, int customerId, String title,
+            String description, String location, String contact, String url,
+            LocalDateTime start, LocalDateTime end, String type, int userId) {
+        setAppointmentId(appointmentId);
+        setCustomerId(customerId);
+        setTitle(title);
+        setDescription(description);
+        setLocation(location);
+        setContact(contact);
+        setUrl(url);
+        setStart(start);
+        setEnd(end);
+        setType(type);
+        setUserId(userId);
+    }
+
+    public Appointment(int customerId, String title, String description,
+            String location, String contact, String url, LocalDateTime start,
+            LocalDateTime end, String type, int userId) {
+        setCustomerId(customerId);
+        setTitle(title);
+        setDescription(description);
+        setLocation(location);
+        setContact(contact);
+        setUrl(url);
+        setStart(start);
+        setEnd(end);
+        setType(type);
+        setUserId(userId);
+    }
+
     // Setters
     public void setAppointmentId(int id) {
         this.appointmentId.set(id);
