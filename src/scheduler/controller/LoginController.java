@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package scheduler.view;
+package scheduler.controller;
 
 import scheduler.Database;
 import java.net.URL;
@@ -79,34 +79,6 @@ public class LoginController implements Initializable {
             Database.setCurrentUser(userName);
             System.out.println("Successfully logged in as: "
                     + Database.getCurrentUser());
-            CountryDao countryDao = new CountryDao(conn);
-            CityDao cityDao = new CityDao(conn);
-            AddressDao aDao = new AddressDao(conn);
-            AppointmentDao aptDao = new AppointmentDao(conn);
-            for (Customer c : cDao.getAll()) {
-                System.out.println(c.getCustomerName().getValue());
-            }
-            countryDao.insert(new Country("Ireland"));
-            cityDao.insert(new City("Dublin", countryDao.getId("Ireland")));
-            Address address = new Address("444 Real Ave", "", cityDao.getId("Dublin"),
-                    "12345", "8002888739");
-            aDao.insert(address);
-            cDao.insert(new Customer("Tom Jones", aDao.getId("444 Real Ave")));
-            for (Customer c : cDao.getAll()) {
-                System.out.println(c.getCustomerName().getValue());
-            }
-            for (Appointment a : aptDao.getAll()) {
-                System.out.println(a.getTitle().getValue());
-            }
-            Appointment apt = new Appointment(cDao.getId("Tom Jones"), "New Appointment",
-                    "It's about lice.", "Home", "Bill Jillers", "www.goatse.cx",
-                    LocalDateTime.of(2019, Month.JULY, 14, 0, 0, 0),
-                    LocalDateTime.of(2019, Month.JULY, 15, 0, 0, 0),
-                    "Informal", uDao.getId(Database.getCurrentUser()));
-            aptDao.insert(apt);
-            for (Appointment a : aptDao.getAll()) {
-                System.out.println(a.getTitle().getValue());
-            }
         } else {
             System.out.println("Incorrect login information");
         }
@@ -134,5 +106,4 @@ public class LoginController implements Initializable {
         }
         return password.equals(dbPassword);
     }
-
 }
