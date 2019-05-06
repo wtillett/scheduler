@@ -96,9 +96,9 @@ public class CountryDao implements Dao<Country> {
         try (PreparedStatement ps = conn.prepareStatement(INSERT)) {
             ps.setString(1, country.getCountry().getValue());
             ps.setTimestamp(2, now);
-            ps.setString(3, Database.getCurrentUser());
+            ps.setString(3, Database.getCurrentUserName());
             ps.setTimestamp(4, now);
-            ps.setString(5, Database.getCurrentUser());
+            ps.setString(5, Database.getCurrentUserName());
             ps.setString(6, country.getCountry().getValue());
             result = ps.executeUpdate();
         } catch (SQLException e) {
@@ -113,7 +113,7 @@ public class CountryDao implements Dao<Country> {
         try (PreparedStatement ps = conn.prepareStatement(UPDATE)) {
             ps.setString(1, country.getCountry().getValue());
             ps.setTimestamp(2, now);
-            ps.setString(3, Database.getCurrentUser());
+            ps.setString(3, Database.getCurrentUserName());
             ps.setInt(4, country.getCountryId().getValue());
             result = ps.executeUpdate();
         } catch (SQLException e) {

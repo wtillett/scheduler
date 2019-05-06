@@ -16,6 +16,8 @@ import javafx.stage.Stage;
  * @author Will Tillett
  */
 public class Scheduler extends Application {
+    
+    private static Stage stage;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -23,9 +25,13 @@ public class Scheduler extends Application {
                 .getResource("view/Login.fxml"));
 
         Scene scene = new Scene(root);
-
+        this.stage = stage;
         stage.setScene(scene);
         stage.show();
+    }
+    
+    public static Stage getStage() {
+        return stage;
     }
 
     /**

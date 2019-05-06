@@ -108,9 +108,9 @@ public class AppointmentDao implements Dao<Appointment> {
             ps.setTimestamp(7, Timestamp.valueOf(a.getStart()));
             ps.setTimestamp(8, Timestamp.valueOf(a.getEnd()));
             ps.setTimestamp(9, now);
-            ps.setString(10, Database.getCurrentUser());
+            ps.setString(10, Database.getCurrentUserName());
             ps.setTimestamp(11, now);
-            ps.setString(12, Database.getCurrentUser());
+            ps.setString(12, Database.getCurrentUserName());
             ps.setString(13, a.getType().getValue());
             ps.setInt(14, a.getUserId().getValue());
             ps.setString(15, a.getTitle().getValue());
@@ -134,7 +134,7 @@ public class AppointmentDao implements Dao<Appointment> {
             ps.setTimestamp(7, Timestamp.valueOf(a.getStart()));
             ps.setTimestamp(8, Timestamp.valueOf(a.getEnd()));
             ps.setTimestamp(9, now);
-            ps.setString(10, Database.getCurrentUser());
+            ps.setString(10, Database.getCurrentUserName());
             ps.setString(11, a.getType().getValue());
             ps.setInt(12, a.getUserId().getValue());
             ps.setInt(13, a.getAppointmentId().getValue());

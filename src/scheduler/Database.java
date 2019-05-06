@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 import javax.sql.DataSource;
+import scheduler.model.User;
 
 /**
  *
@@ -19,7 +20,7 @@ import javax.sql.DataSource;
  */
 public abstract class Database {
 
-    private static String currentUser;
+    private static User currentUser;
 
     public static DataSource getDataSource() {
         Properties properties = new Properties();
@@ -50,12 +51,16 @@ public abstract class Database {
         return conn;
     }
 
-    public static void setCurrentUser(String userName) {
-        currentUser = userName;
+    public static void setCurrentUser(User user) {
+        currentUser = user;
     }
 
-    public static String getCurrentUser() {
-        return currentUser;
+    public static String getCurrentUserName() {
+        return currentUser.getUserName().getValue();
+    }
+    
+    public static int getCurrentUserId() {
+        return currentUser.getUserId().getValue();
     }
 
 }

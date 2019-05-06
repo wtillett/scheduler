@@ -5,32 +5,27 @@
  */
 package scheduler.controller;
 
+import java.io.IOException;
 import scheduler.Database;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import scheduler.model.Address;
-import scheduler.dao.AddressDao;
-import scheduler.model.Appointment;
-import scheduler.dao.AppointmentDao;
-import scheduler.model.City;
-import scheduler.dao.CityDao;
-import scheduler.model.Country;
-import scheduler.dao.CountryDao;
-import scheduler.model.Customer;
+import javafx.stage.Stage;
+import scheduler.Scheduler;
 import scheduler.dao.CustomerDao;
 import scheduler.dao.UserDao;
 
@@ -58,7 +53,6 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         conn = Database.getConnection();
-        cDao = new CustomerDao(conn);
         uDao = new UserDao(conn);
     }
 
@@ -76,9 +70,20 @@ public class LoginController implements Initializable {
 
     private void login(String userName, String password) {
         if (checkCredentials(userName, password)) {
-            Database.setCurrentUser(userName);
+            Database.setCurrentUser(uDao.getByUserName(userName));
             System.out.println("Successfully logged in as: "
-                    + Database.getCurrentUser());
+                    + Database.getCurrentUserName());
+            Parent root = null;
+            try {
+                root = FXMLLoader.load(getClass().getResource("../view/Main.fxml"));
+                Scene scene = new Scene(root);
+                Stage stage = Scheduler.getStage();
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException e) {
+                System.out.println("Unable to switch scene "
+                        + e.getMessage());
+            }
         } else {
             System.out.println("Incorrect login information");
         }

@@ -28,6 +28,8 @@ public class UserDao implements Dao<User> {
             = "DELETE FROM user WHERE userId = ?";
     private static final String GET_ALL
             = "SELECT * FROM user ORDER BY userId";
+    private static final String GET_BY_NAME
+            = "SELECT * FROM user WHERE userName = ?";
     private static final String GET_ID
             = "SELECT userId FROM user WHERE userName = ?";
     private static final String GET
@@ -58,6 +60,19 @@ public class UserDao implements Dao<User> {
             }
         } catch (SQLException e) {
             System.out.println("getUser: " + e.getMessage());
+        }
+        return null;
+    }
+    
+    public User getByUserName(String userName) {
+        try (PreparedStatement ps = conn.prepareStatement(GET_BY_NAME)) {
+            ps.setString(1, userName);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return extractUserFromResultSet(rs);
+            }
+        } catch (SQLException e) {
+            System.out.println("getByUserName: " + e.getMessage());
         }
         return null;
     }
@@ -98,9 +113,9 @@ public class UserDao implements Dao<User> {
             ps.setString(1, user.getUserName().getValue());
             ps.setString(2, user.getPassword().getValue());
             ps.setTimestamp(3, now);
-            ps.setString(4, Database.getCurrentUser());
+            ps.setString(4, Database.getCurrentUserName());
             ps.setTimestamp(5, now);
-            ps.setString(6, Database.getCurrentUser());
+            ps.setString(6, Database.getCurrentUserName());
             ps.setString(7, user.getUserName().getValue());
             result = ps.executeUpdate();
         } catch (SQLException e) {
@@ -116,7 +131,7 @@ public class UserDao implements Dao<User> {
             ps.setString(1, user.getUserName().getValue());
             ps.setString(2, user.getPassword().getValue());
             ps.setTimestamp(3, now);
-            ps.setString(4, Database.getCurrentUser());
+            ps.setString(4, Database.getCurrentUserName());
             ps.setInt(5, user.getUserId().getValue());
             result = ps.executeUpdate();
         } catch (SQLException e) {

@@ -98,9 +98,9 @@ public class CustomerDao implements Dao<Customer> {
             ps.setString(1, c.getCustomerName().getValue());
             ps.setInt(2, c.getAddressId().getValue());
             ps.setTimestamp(3, now);
-            ps.setString(4, Database.getCurrentUser());
+            ps.setString(4, Database.getCurrentUserName());
             ps.setTimestamp(5, now);
-            ps.setString(6, Database.getCurrentUser());
+            ps.setString(6, Database.getCurrentUserName());
             ps.setString(7, c.getCustomerName().getValue());
             result = ps.executeUpdate();
         } catch (SQLException e) {
@@ -116,7 +116,7 @@ public class CustomerDao implements Dao<Customer> {
             ps.setString(1, c.getCustomerName().getValue());
             ps.setInt(2, c.getAddressId().getValue());
             ps.setTimestamp(3, now);
-            ps.setString(4, Database.getCurrentUser());
+            ps.setString(4, Database.getCurrentUserName());
             ps.setInt(5, c.getCustomerId().getValue());
             result = ps.executeUpdate();
         } catch (SQLException e) {

@@ -101,9 +101,9 @@ public class AddressDao implements Dao<Address> {
             ps.setString(4, address.getPostalCode().getValue());
             ps.setString(5, address.getPhone().getValue());
             ps.setTimestamp(6, now);
-            ps.setString(7, Database.getCurrentUser());
+            ps.setString(7, Database.getCurrentUserName());
             ps.setTimestamp(8, now);
-            ps.setString(9, Database.getCurrentUser());
+            ps.setString(9, Database.getCurrentUserName());
             ps.setString(10, address.getAddress().getValue());
             result = ps.executeUpdate();
         } catch (SQLException e) {
@@ -122,7 +122,7 @@ public class AddressDao implements Dao<Address> {
             ps.setString(4, address.getPostalCode().getValue());
             ps.setString(5, address.getPhone().getValue());
             ps.setTimestamp(6, now);
-            ps.setString(7, Database.getCurrentUser());
+            ps.setString(7, Database.getCurrentUserName());
             ps.setInt(8, address.getAddressId().getValue());
             result = ps.executeUpdate();
         } catch (SQLException e) {

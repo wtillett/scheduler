@@ -98,9 +98,9 @@ public class CityDao implements Dao<City> {
             ps.setString(1, city.getCity().getValue());
             ps.setInt(2, city.getCountryId().getValue());
             ps.setTimestamp(3, now);
-            ps.setString(4, Database.getCurrentUser());
+            ps.setString(4, Database.getCurrentUserName());
             ps.setTimestamp(5, now);
-            ps.setString(6, Database.getCurrentUser());
+            ps.setString(6, Database.getCurrentUserName());
             ps.setString(7, city.getCity().getValue());
             result = ps.executeUpdate();
         } catch (SQLException e) {
@@ -116,7 +116,7 @@ public class CityDao implements Dao<City> {
             ps.setString(1, city.getCity().getValue());
             ps.setInt(2, city.getCountryId().getValue());
             ps.setTimestamp(3, now);
-            ps.setString(4, Database.getCurrentUser());
+            ps.setString(4, Database.getCurrentUserName());
             ps.setInt(5, city.getCityId().getValue());
             result = ps.executeUpdate();
         } catch (SQLException e) {
