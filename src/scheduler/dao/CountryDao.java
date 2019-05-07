@@ -10,8 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import scheduler.Database;
 import scheduler.model.Country;
 
@@ -74,8 +74,8 @@ public class CountryDao {
         return id;
     }
 
-    public List<Country> getAll() {
-        List<Country> allCountries = new ArrayList<>();
+    public ObservableList<Country> getAll() {
+        ObservableList<Country> allCountries = FXCollections.observableArrayList();
         try (PreparedStatement ps = conn.prepareStatement(GET_ALL)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

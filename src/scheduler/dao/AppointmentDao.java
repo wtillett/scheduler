@@ -11,7 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import scheduler.Database;
 import scheduler.model.Appointment;
 
@@ -79,8 +80,8 @@ public class AppointmentDao {
         return id;
     }
 
-    public List<Appointment> getAll() {
-        List<Appointment> allAppointments = new ArrayList<>();
+    public ObservableList<Appointment> getAll() {
+        ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
         try (PreparedStatement ps = conn.prepareStatement(GET_ALL)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

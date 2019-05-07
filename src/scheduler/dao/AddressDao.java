@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import scheduler.Database;
 import scheduler.model.Address;
 
@@ -75,8 +77,8 @@ public class AddressDao {
         return id;
     }
 
-    public List<Address> getAll() {
-        List<Address> allAddresses = new ArrayList<>();
+    public ObservableList<Address> getAll() {
+        ObservableList<Address> allAddresses = FXCollections.observableArrayList();
         try (PreparedStatement ps = conn.prepareStatement(GET_ALL)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
