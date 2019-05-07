@@ -19,7 +19,7 @@ import scheduler.model.Appointment;
  *
  * @author Will Tillett
  */
-public class AppointmentDao implements Dao<Appointment> {
+public class AppointmentDao {
 
     private final Connection conn;
     private static Timestamp now;
@@ -52,7 +52,6 @@ public class AppointmentDao implements Dao<Appointment> {
         this.now = new Timestamp(System.currentTimeMillis());
     }
 
-    @Override
     public Appointment get(int id) {
         try (PreparedStatement ps = conn.prepareStatement(GET)) {
             ps.setInt(1, id);
@@ -66,7 +65,6 @@ public class AppointmentDao implements Dao<Appointment> {
         return null;
     }
 
-    @Override
     public int getId(String title) {
         int id = -1;
         try (PreparedStatement ps = conn.prepareStatement(GET_ID)) {
@@ -81,7 +79,6 @@ public class AppointmentDao implements Dao<Appointment> {
         return id;
     }
 
-    @Override
     public List<Appointment> getAll() {
         List<Appointment> allAppointments = new ArrayList<>();
         try (PreparedStatement ps = conn.prepareStatement(GET_ALL)) {
@@ -95,7 +92,6 @@ public class AppointmentDao implements Dao<Appointment> {
         return allAppointments;
     }
 
-    @Override
     public int insert(Appointment a) {
         int result = 0;
         try (PreparedStatement ps = conn.prepareStatement(INSERT)) {
@@ -121,7 +117,6 @@ public class AppointmentDao implements Dao<Appointment> {
         return result;
     }
 
-    @Override
     public int update(Appointment a) {
         int result = 0;
         try (PreparedStatement ps = conn.prepareStatement(UPDATE)) {
@@ -145,7 +140,6 @@ public class AppointmentDao implements Dao<Appointment> {
         return result;
     }
 
-    @Override
     public void delete(Appointment a) {
         try (PreparedStatement ps = conn.prepareStatement(DELETE)) {
             ps.setInt(1, a.getAppointmentId().getValue());

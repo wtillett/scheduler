@@ -19,7 +19,7 @@ import scheduler.model.Country;
  *
  * @author Will Tillett
  */
-public class CountryDao implements Dao<Country> {
+public class CountryDao {
 
     private final Connection conn;
     private static Timestamp now;
@@ -47,7 +47,6 @@ public class CountryDao implements Dao<Country> {
         this.now = new Timestamp(System.currentTimeMillis());
     }
 
-    @Override
     public Country get(int id) {
         try (PreparedStatement ps = conn.prepareStatement(GET)) {
             ps.setInt(1, id);
@@ -61,7 +60,6 @@ public class CountryDao implements Dao<Country> {
         return null;
     }
 
-    @Override
     public int getId(String name) {
         int id = -1;
         try (PreparedStatement ps = conn.prepareStatement(GET_ID)) {
@@ -76,7 +74,6 @@ public class CountryDao implements Dao<Country> {
         return id;
     }
 
-    @Override
     public List<Country> getAll() {
         List<Country> allCountries = new ArrayList<>();
         try (PreparedStatement ps = conn.prepareStatement(GET_ALL)) {
@@ -90,7 +87,6 @@ public class CountryDao implements Dao<Country> {
         return allCountries;
     }
 
-    @Override
     public int insert(Country country) {
         int result = 0;
         try (PreparedStatement ps = conn.prepareStatement(INSERT)) {
@@ -107,7 +103,6 @@ public class CountryDao implements Dao<Country> {
         return result;
     }
 
-    @Override
     public int update(Country country) {
         int result = 0;
         try (PreparedStatement ps = conn.prepareStatement(UPDATE)) {
@@ -122,7 +117,6 @@ public class CountryDao implements Dao<Country> {
         return result;
     }
 
-    @Override
     public void delete(Country country) {
         try (PreparedStatement ps = conn.prepareStatement(DELETE)) {
             ps.setInt(1, country.getCountryId().getValue());

@@ -19,7 +19,7 @@ import scheduler.model.Address;
  *
  * @author Will Tillett
  */
-public class AddressDao implements Dao<Address> {
+public class AddressDao {
 
     private final Connection conn;
     private static Timestamp now;
@@ -48,7 +48,6 @@ public class AddressDao implements Dao<Address> {
         this.now = new Timestamp(System.currentTimeMillis());
     }
 
-    @Override
     public Address get(int id) {
         try (PreparedStatement ps = conn.prepareStatement(GET)) {
             ps.setInt(1, id);
@@ -62,7 +61,6 @@ public class AddressDao implements Dao<Address> {
         return null;
     }
 
-    @Override
     public int getId(String name) {
         int id = -1;
         try (PreparedStatement ps = conn.prepareStatement(GET_ID)) {
@@ -77,7 +75,6 @@ public class AddressDao implements Dao<Address> {
         return id;
     }
 
-    @Override
     public List<Address> getAll() {
         List<Address> allAddresses = new ArrayList<>();
         try (PreparedStatement ps = conn.prepareStatement(GET_ALL)) {
@@ -91,7 +88,6 @@ public class AddressDao implements Dao<Address> {
         return allAddresses;
     }
 
-    @Override
     public int insert(Address address) {
         int result = 0;
         try (PreparedStatement ps = conn.prepareStatement(INSERT)) {
@@ -112,7 +108,6 @@ public class AddressDao implements Dao<Address> {
         return result;
     }
 
-    @Override
     public int update(Address address) {
         int result = 0;
         try (PreparedStatement ps = conn.prepareStatement(UPDATE)) {
@@ -131,7 +126,6 @@ public class AddressDao implements Dao<Address> {
         return result;
     }
 
-    @Override
     public void delete(Address address) {
         try (PreparedStatement ps = conn.prepareStatement(DELETE)) {
             ps.setInt(1, address.getAddressId().getValue());

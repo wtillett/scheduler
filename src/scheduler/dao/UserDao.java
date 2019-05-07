@@ -19,7 +19,7 @@ import scheduler.model.User;
  *
  * @author Will Tillett
  */
-public class UserDao implements Dao<User> {
+public class UserDao {
 
     private final Connection conn;
     private static Timestamp now;
@@ -50,7 +50,6 @@ public class UserDao implements Dao<User> {
         this.now = new Timestamp(System.currentTimeMillis());
     }
 
-    @Override
     public User get(int id) {
         try (PreparedStatement ps = conn.prepareStatement(GET)) {
             ps.setInt(1, id);
@@ -77,7 +76,6 @@ public class UserDao implements Dao<User> {
         return null;
     }
 
-    @Override
     public int getId(String name) {
         int id = -1;
         try (PreparedStatement ps = conn.prepareStatement(GET_ID)) {
@@ -92,7 +90,6 @@ public class UserDao implements Dao<User> {
         return id;
     }
 
-    @Override
     public List<User> getAll() {
         List<User> allUsers = new ArrayList<>();
         try (PreparedStatement ps = conn.prepareStatement(GET_ALL)) {
@@ -106,7 +103,6 @@ public class UserDao implements Dao<User> {
         return allUsers;
     }
 
-    @Override
     public int insert(User user) {
         int result = 0;
         try (PreparedStatement ps = conn.prepareStatement(INSERT)) {
@@ -124,7 +120,6 @@ public class UserDao implements Dao<User> {
         return result;
     }
 
-    @Override
     public int update(User user) {
         int result = 0;
         try (PreparedStatement ps = conn.prepareStatement(UPDATE)) {
@@ -140,7 +135,6 @@ public class UserDao implements Dao<User> {
         return result;
     }
 
-    @Override
     public void delete(User user) {
         try (PreparedStatement ps = conn.prepareStatement(DELETE)) {
             ps.setInt(1, user.getUserId().getValue());

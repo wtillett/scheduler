@@ -19,7 +19,7 @@ import scheduler.model.City;
  *
  * @author Will Tillett
  */
-public class CityDao implements Dao<City> {
+public class CityDao {
 
     private final Connection conn;
     private static Timestamp now;
@@ -48,7 +48,6 @@ public class CityDao implements Dao<City> {
         this.now = new Timestamp(System.currentTimeMillis());
     }
 
-    @Override
     public City get(int id) {
         try (PreparedStatement ps = conn.prepareStatement(GET)) {
             ps.setInt(1, id);
@@ -62,7 +61,6 @@ public class CityDao implements Dao<City> {
         return null;
     }
 
-    @Override
     public int getId(String name) {
         int id = -1;
         try (PreparedStatement ps = conn.prepareStatement(GET_ID)) {
@@ -77,7 +75,6 @@ public class CityDao implements Dao<City> {
         return id;
     }
 
-    @Override
     public List<City> getAll() {
         List<City> allCities = new ArrayList<>();
         try (PreparedStatement ps = conn.prepareStatement(GET_ALL)) {
@@ -91,7 +88,6 @@ public class CityDao implements Dao<City> {
         return allCities;
     }
 
-    @Override
     public int insert(City city) {
         int result = 0;
         try (PreparedStatement ps = conn.prepareStatement(INSERT)) {
@@ -109,7 +105,6 @@ public class CityDao implements Dao<City> {
         return result;
     }
 
-    @Override
     public int update(City city) {
         int result = 0;
         try (PreparedStatement ps = conn.prepareStatement(UPDATE)) {
@@ -125,7 +120,6 @@ public class CityDao implements Dao<City> {
         return result;
     }
 
-    @Override
     public void delete(City city) {
         try (PreparedStatement ps = conn.prepareStatement(DELETE)) {
             ps.setInt(1, city.getCityId().getValue());

@@ -19,10 +19,13 @@ import scheduler.model.Customer;
  *
  * @author Will Tillett
  */
-public class CustomerDao implements Dao<Customer> {
+public class CustomerDao {
 
     private final Connection conn;
     private static Timestamp now;
+    private AddressDao addressDao;
+    private CityDao cityDao;
+    private CountryDao countryDao;
 
     private static final String DELETE
             = "DELETE FROM customer WHERE customerId = ?";
@@ -46,9 +49,11 @@ public class CustomerDao implements Dao<Customer> {
     public CustomerDao(Connection conn) {
         this.conn = conn;
         this.now = new Timestamp(System.currentTimeMillis());
+        this.addressDao = new AddressDao(conn);
+        this.cityDao = new CityDao(conn);
+        this.countryDao = new CountryDao(conn);
     }
 
-    @Override
     public Customer get(int id) {
         try (PreparedStatement ps = conn.prepareStatement(GET)) {
             ps.setInt(1, id);
@@ -62,7 +67,6 @@ public class CustomerDao implements Dao<Customer> {
         return null;
     }
 
-    @Override
     public int getId(String name) {
         int id = -1;
         try (PreparedStatement ps = conn.prepareStatement(GET_ID)) {
@@ -77,7 +81,6 @@ public class CustomerDao implements Dao<Customer> {
         return id;
     }
 
-    @Override
     public List<Customer> getAll() {
         List<Customer> allCustomers = new ArrayList<>();
         try (PreparedStatement ps = conn.prepareStatement(GET_ALL)) {
@@ -91,7 +94,6 @@ public class CustomerDao implements Dao<Customer> {
         return allCustomers;
     }
 
-    @Override
     public int insert(Customer c) {
         int result = 0;
         try (PreparedStatement ps = conn.prepareStatement(INSERT)) {
@@ -109,7 +111,6 @@ public class CustomerDao implements Dao<Customer> {
         return result;
     }
 
-    @Override
     public int update(Customer c) {
         int result = 0;
         try (PreparedStatement ps = conn.prepareStatement(UPDATE)) {
@@ -125,7 +126,6 @@ public class CustomerDao implements Dao<Customer> {
         return result;
     }
 
-    @Override
     public void delete(Customer c) {
         try (PreparedStatement ps = conn.prepareStatement(DELETE)) {
             ps.setInt(1, c.getCustomerId().getValue());
