@@ -5,15 +5,23 @@
  */
 package scheduler.controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import scheduler.Database;
+import scheduler.Scheduler;
 import scheduler.dao.AddressDao;
 import scheduler.dao.CityDao;
 import scheduler.dao.CountryDao;
@@ -52,7 +60,7 @@ public class EditCustomerController implements Initializable {
     private Button cancelBtn;
     
     private static Connection conn;
-    private Customer customer;
+    private static Customer customer;
     private CustomerDao customerDao;
     private AddressDao addressDao;
     private CityDao cityDao;
@@ -71,7 +79,7 @@ public class EditCustomerController implements Initializable {
     }
     
     public void setCustomer(int customerId) {
-        Customer customer = customerDao.get(customerId);
+        customer = customerDao.get(customerId);
         Address address = addressDao.get(customer.getAddressId().getValue());
         City city = cityDao.get(address.getCityId().getValue());
         Country country = countryDao.get(city.getCountryId().getValue());
@@ -93,6 +101,22 @@ public class EditCustomerController implements Initializable {
     
     @FXML
     private void handleCancelBtn(ActionEvent event) {
+        handleSceneChange();
+    }
+    
+    private void handleSceneChange() {
+        String fxml = "/scheduler/view/CustomerList.fxml";
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(getClass().getResource(fxml));
+            Scene scene = new Scene(root);
+            Stage stage = Scheduler.getStage();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            Logger.getLogger(EditCustomerController.class.getName())
+                    .log(Level.SEVERE, null, e);
+        }
     }
     
 }

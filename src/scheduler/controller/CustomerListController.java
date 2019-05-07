@@ -60,6 +60,8 @@ public class CustomerListController implements Initializable {
     private Button goBackBtn;
     @FXML
     private Button editBtn;
+    @FXML
+    private Button deleteBtn;
 
     private static Connection conn;
     private CustomerDao customerDao;
@@ -68,8 +70,16 @@ public class CustomerListController implements Initializable {
     private CountryDao countryDao;
 
     private static final int GO_BACK = 0;
-    private static final int EDIT_CUSTOMER = 1;
-    private static final int ADD_CUSTOMER = 2;
+    private static final int ADD_CUSTOMER = 1;
+    
+    private static final String QUERY 
+            = "SELECT customer.customerName, address.address, city.city, "
+            + "country.country, address.phone "
+            + "FROM country "
+            + "JOIN city ON country.countryId = city.countryId "
+            + "JOIN address ON address.cityId = city.cityId "
+            + "JOIN customer ON customer.addressId = address.addressId "
+            + "ORDER BY customer.customerId";
 
     /**
      * Initializes the controller class.
@@ -99,6 +109,7 @@ public class CustomerListController implements Initializable {
 
     @FXML
     private void handleAddCustomerBtn(ActionEvent event) {
+        handleSceneChange(ADD_CUSTOMER);
     }
 
     @FXML
@@ -128,14 +139,20 @@ public class CustomerListController implements Initializable {
         handleSceneChange(GO_BACK);
     }
 
+    @FXML
+    private void handleDeleteBtn(ActionEvent event) {
+        CustomerTableRow current = table.getSelectionModel().getSelectedItem();
+        int id = current.customerId;
+        Customer customer = customerDao.get(id);
+        customerDao.delete(customer);
+        refreshTable();
+    }
+    
     private void handleSceneChange(int action) {
         String fxml = "/scheduler/view/";
         switch (action) {
             case GO_BACK:
                 fxml += "Main.fxml";
-                break;
-            case EDIT_CUSTOMER:
-                fxml += "EditCustomer.fxml";
                 break;
             case ADD_CUSTOMER:
                 fxml += "AddCustomer.fxml";
@@ -153,6 +170,17 @@ public class CustomerListController implements Initializable {
                     .log(Level.SEVERE, null, e);
         }
     }
+
+    private void refreshTable() {
+        ObservableList<Customer> allCustomers = customerDao.getAll();
+        ObservableList<CustomerTableRow> customerList
+                = FXCollections.observableArrayList();
+        for (Customer customer : allCustomers) {
+            customerList.add(new CustomerTableRow(customer));
+        }
+        table.setItems(customerList);
+    }
+
 
     private class CustomerTableRow {
 

@@ -33,6 +33,7 @@
                     <buttons>
                       <Button fx:id="addCustomerBtn" mnemonicParsing="false" onAction="#handleAddCustomerBtn" text="Add Customer" />
                         <Button fx:id="editBtn" mnemonicParsing="false" onAction="#handleEditBtn" text="Edit" />
+                        <Button fx:id="deleteBtn" mnemonicParsing="false" onAction="#handleDeleteBtn" text="Delete" />
                         <Button fx:id="goBackBtn" mnemonicParsing="false" onAction="#handleGoBackBtn" text="Go Back" />
                     </buttons>
                   </ButtonBar>
