@@ -5,19 +5,27 @@
  */
 package scheduler.controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.Stage;
 import scheduler.Database;
+import scheduler.Scheduler;
 import scheduler.dao.AddressDao;
 import scheduler.dao.CityDao;
 import scheduler.dao.CountryDao;
@@ -57,6 +65,10 @@ public class CustomerListController implements Initializable {
     private CityDao cityDao;
     private CountryDao countryDao;
 
+    private static final int GO_BACK = 0;
+    private static final int EDIT_CUSTOMER = 1;
+    private static final int ADD_CUSTOMER = 2;
+
     /**
      * Initializes the controller class.
      */
@@ -89,10 +101,33 @@ public class CustomerListController implements Initializable {
 
     @FXML
     private void handleGoBackBtn(ActionEvent event) {
+        handleSceneChange(GO_BACK);
     }
-    
-    private void handleSceneChange(int destination) {
-        
+
+    private void handleSceneChange(int action) {
+        String fxml = "/scheduler/view/";
+        switch (action) {
+            case GO_BACK:
+                fxml += "Main.fxml";
+                break;
+            case EDIT_CUSTOMER:
+                fxml += "EditCustomer.fxml";
+                break;
+            case ADD_CUSTOMER:
+                fxml += "AddCustomer.fxml";
+                break;
+        }
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(getClass().getResource(fxml));
+            Scene scene = new Scene(root);
+            Stage stage = Scheduler.getStage();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            Logger.getLogger(CustomerListController.class.getName())
+                    .log(Level.SEVERE, null, e);
+        }
     }
 
     private class CustomerTableRow {
@@ -114,6 +149,5 @@ public class CustomerListController implements Initializable {
             this.colPhone = address.getPhone();
         }
     }
-    
-    
+
 }

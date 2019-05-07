@@ -42,7 +42,7 @@ public class MainController implements Initializable {
     private static final int APPOINTMENTS = 0;
     private static final int CUSTOMERS = 1;
     private static final int REPORTS = 2;
-    private static final int LOGIN = 3;
+    private static final int CANCEL = 3;
 
     /**
      * Initializes the controller class.
@@ -55,7 +55,7 @@ public class MainController implements Initializable {
     @FXML
     private void handleLogoutBtn(ActionEvent event) {
         Database.setCurrentUser(null);
-        handleSceneChange(LOGIN);
+        handleSceneChange(CANCEL);
     }
 
     @FXML
@@ -75,9 +75,9 @@ public class MainController implements Initializable {
     private void handleLogBtn(ActionEvent event) {
     }
 
-    private void handleSceneChange(int destination) {
+    private void handleSceneChange(int action) {
         String fxml = "/scheduler/view/";
-        switch (destination) {
+        switch (action) {
             case APPOINTMENTS:
                 fxml += "Appointments.fxml";
                 break;
@@ -87,10 +87,8 @@ public class MainController implements Initializable {
             case REPORTS:
                 fxml += "Reports.fxml";
                 break;
-            case LOGIN:
+            case CANCEL:
                 fxml += "Login.fxml";
-                break;
-            default:
                 break;
         }
         Parent root = null;
@@ -101,7 +99,8 @@ public class MainController implements Initializable {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(MainController.class.getName())
+                    .log(Level.SEVERE, null, e);
         }
     }
 
