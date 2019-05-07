@@ -23,9 +23,6 @@ public class CustomerDao {
 
     private final Connection conn;
     private static Timestamp now;
-    private AddressDao addressDao;
-    private CityDao cityDao;
-    private CountryDao countryDao;
 
     private static final String DELETE
             = "DELETE FROM customer WHERE customerId = ?";
@@ -49,9 +46,6 @@ public class CustomerDao {
     public CustomerDao(Connection conn) {
         this.conn = conn;
         this.now = new Timestamp(System.currentTimeMillis());
-        this.addressDao = new AddressDao(conn);
-        this.cityDao = new CityDao(conn);
-        this.countryDao = new CountryDao(conn);
     }
 
     public Customer get(int id) {
