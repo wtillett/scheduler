@@ -64,6 +64,7 @@ public class MainController implements Initializable {
 
     @FXML
     private void handleCustomersBtn(ActionEvent event) {
+        handleSceneChange(CUSTOMERS);
     }
 
     @FXML
@@ -81,7 +82,7 @@ public class MainController implements Initializable {
                 fxml += "Appointments.fxml";
                 break;
             case CUSTOMERS:
-                fxml += "Customers.fxml";
+                fxml += "CustomerList.fxml";
                 break;
             case REPORTS:
                 fxml += "Reports.fxml";
