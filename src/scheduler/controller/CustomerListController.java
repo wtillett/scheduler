@@ -58,6 +58,8 @@ public class CustomerListController implements Initializable {
     private Button addCustomerBtn;
     @FXML
     private Button goBackBtn;
+    @FXML
+    private Button editBtn;
 
     private static Connection conn;
     private CustomerDao customerDao;
@@ -100,6 +102,28 @@ public class CustomerListController implements Initializable {
     }
 
     @FXML
+    private void handleEditBtn(ActionEvent event) {
+        CustomerTableRow current = table.getSelectionModel().getSelectedItem();
+        int id = current.customerId;
+        Parent root = null;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass()
+                    .getResource("/scheduler/view/EditCustomer.fxml"));
+            root = loader.load();
+            Scene scene = new Scene(root);
+            Stage stage = Scheduler.getStage();
+            stage.setScene(scene);
+            stage.show();
+            EditCustomerController controller = loader.getController();
+
+            controller.setCustomer(id);
+        } catch (IOException e) {
+            Logger.getLogger(CustomerListController.class.getName())
+                    .log(Level.SEVERE, null, e);
+        }
+    }
+
+    @FXML
     private void handleGoBackBtn(ActionEvent event) {
         handleSceneChange(GO_BACK);
     }
@@ -132,6 +156,7 @@ public class CustomerListController implements Initializable {
 
     private class CustomerTableRow {
 
+        int customerId;
         SimpleStringProperty colName = new SimpleStringProperty();
         SimpleStringProperty colAddress = new SimpleStringProperty();
         SimpleStringProperty colCity = new SimpleStringProperty();
@@ -142,6 +167,7 @@ public class CustomerListController implements Initializable {
             Address address = addressDao.get(customer.getAddressId().getValue());
             City city = cityDao.get(address.getCityId().getValue());
             Country country = countryDao.get(city.getCountryId().getValue());
+            this.customerId = customer.getCustomerId().getValue();
             this.colName = customer.getCustomerName();
             this.colAddress = address.getAddress();
             this.colCity = city.getCity();

@@ -32,6 +32,7 @@
                   <ButtonBar buttonMinWidth="128.0" layoutX="225.0" layoutY="9.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="16.0">
                     <buttons>
                       <Button fx:id="addCustomerBtn" mnemonicParsing="false" onAction="#handleAddCustomerBtn" text="Add Customer" />
+                        <Button fx:id="editBtn" mnemonicParsing="false" onAction="#handleEditBtn" text="Edit" />
                         <Button fx:id="goBackBtn" mnemonicParsing="false" onAction="#handleGoBackBtn" text="Go Back" />
                     </buttons>
                   </ButtonBar>
