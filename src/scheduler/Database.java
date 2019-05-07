@@ -58,7 +58,7 @@ public abstract class Database {
     public static String getCurrentUserName() {
         return currentUser.getUserName().getValue();
     }
-    
+
     public static int getCurrentUserId() {
         return currentUser.getUserId().getValue();
     }

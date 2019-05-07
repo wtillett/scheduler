@@ -75,7 +75,8 @@ public class LoginController implements Initializable {
                     + Database.getCurrentUserName());
             Parent root = null;
             try {
-                root = FXMLLoader.load(getClass().getResource("../view/Main.fxml"));
+                root = FXMLLoader.load(getClass()
+                        .getResource("/scheduler/view/Main.fxml"));
                 Scene scene = new Scene(root);
                 Stage stage = Scheduler.getStage();
                 stage.setScene(scene);

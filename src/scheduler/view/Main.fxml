@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.controller.MainController">
+<AnchorPane id="AnchorPane" prefHeight="335.0" prefWidth="365.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.controller.MainController">
    <children>
       <Label alignment="CENTER" contentDisplay="CENTER" text="Appointment Scheduler" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="24.0">
          <font>
@@ -16,24 +16,24 @@
       </Label>
       <VBox alignment="TOP_CENTER" prefHeight="337.0" prefWidth="244.0" AnchorPane.bottomAnchor="64.0" AnchorPane.leftAnchor="128.0" AnchorPane.rightAnchor="128.0" AnchorPane.topAnchor="96.0">
          <children>
-            <Button fx:id="appointmentsBtn" mnemonicParsing="false" onAction="#openAppointments" prefWidth="200.0" text="Appointments" textAlignment="CENTER">
+            <Button fx:id="appointmentsBtn" mnemonicParsing="false" onAction="#handleAppointmentsBtn" prefWidth="200.0" text="Appointments" textAlignment="CENTER">
                <VBox.margin>
                   <Insets top="16.0" />
                </VBox.margin></Button>
-            <Button fx:id="customersBtn" mnemonicParsing="false" onAction="#openCustomers" prefWidth="200.0" text="Button">
+            <Button fx:id="customersBtn" mnemonicParsing="false" onAction="#handleCustomersBtn" prefWidth="200.0" text="Customers">
                <VBox.margin>
                   <Insets top="16.0" />
                </VBox.margin></Button>
-            <Button fx:id="reportsBtn" mnemonicParsing="false" onAction="#openReports" prefWidth="200.0" text="Reports">
+            <Button fx:id="reportsBtn" mnemonicParsing="false" onAction="#handleReportsBtn" prefWidth="200.0" text="Reports">
                <VBox.margin>
                   <Insets top="16.0" />
                </VBox.margin></Button>
-            <Button fx:id="logBtn" mnemonicParsing="false" onAction="#openLog" prefWidth="200.0" text="Log.txt">
+            <Button fx:id="logBtn" mnemonicParsing="false" onAction="#handleLogBtn" prefWidth="200.0" text="Log.txt">
                <VBox.margin>
                   <Insets top="16.0" />
                </VBox.margin></Button>
          </children>
       </VBox>
-      <Button fx:id="cancelBtn" cancelButton="true" layoutX="421.0" layoutY="455.0" mnemonicParsing="false" text="Cancel" AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="16.0" />
+      <Button fx:id="logoutBtn" layoutX="237.0" layoutY="294.0" mnemonicParsing="false" onAction="#handleLogoutBtn" text="Logout" AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="16.0" />
    </children>
 </AnchorPane>

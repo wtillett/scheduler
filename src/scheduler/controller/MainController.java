@@ -5,17 +5,26 @@
  */
 package scheduler.controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.stage.Stage;
+import scheduler.Database;
+import scheduler.Scheduler;
 
 /**
  * FXML Controller class
  *
- * @author wtill
+ * @author Will Tillett
  */
 public class MainController implements Initializable {
 
@@ -28,7 +37,12 @@ public class MainController implements Initializable {
     @FXML
     private Button logBtn;
     @FXML
-    private Button cancelBtn;
+    private Button logoutBtn;
+
+    private static final int APPOINTMENTS = 0;
+    private static final int CUSTOMERS = 1;
+    private static final int REPORTS = 2;
+    private static final int LOGIN = 3;
 
     /**
      * Initializes the controller class.
@@ -36,22 +50,58 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-
-    @FXML
-    private void openAppointments(ActionEvent event) {
     }
 
     @FXML
-    private void openCustomers(ActionEvent event) {
+    private void handleLogoutBtn(ActionEvent event) {
+        Database.setCurrentUser(null);
+        handleSceneChange(LOGIN);
     }
 
     @FXML
-    private void openReports(ActionEvent event) {
+    private void handleAppointmentsBtn(ActionEvent event) {
     }
 
     @FXML
-    private void openLog(ActionEvent event) {
+    private void handleCustomersBtn(ActionEvent event) {
     }
-    
+
+    @FXML
+    private void handleReportsBtn(ActionEvent event) {
+    }
+
+    @FXML
+    private void handleLogBtn(ActionEvent event) {
+    }
+
+    private void handleSceneChange(int destination) {
+        String fxml = "/scheduler/view/";
+        switch (destination) {
+            case APPOINTMENTS:
+                fxml += "Appointments.fxml";
+                break;
+            case CUSTOMERS:
+                fxml += "Customers.fxml";
+                break;
+            case REPORTS:
+                fxml += "Reports.fxml";
+                break;
+            case LOGIN:
+                fxml += "Login.fxml";
+                break;
+            default:
+                break;
+        }
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(getClass().getResource(fxml));
+            Scene scene = new Scene(root);
+            Stage stage = Scheduler.getStage();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
 }
