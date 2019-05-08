@@ -6,6 +6,7 @@
 package scheduler.controller;
 
 import java.net.URL;
+import java.sql.Connection;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 import scheduler.Database;
@@ -14,7 +15,6 @@ import scheduler.dao.CustomerDao;
 import scheduler.dao.UserDao;
 import scheduler.model.Appointment;
 import scheduler.model.Customer;
-import scheduler.model.User;
 
 /**
  * FXML Controller class
