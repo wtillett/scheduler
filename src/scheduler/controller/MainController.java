@@ -60,6 +60,7 @@ public class MainController implements Initializable {
 
     @FXML
     private void handleAppointmentsBtn(ActionEvent event) {
+        handleSceneChange(APPOINTMENTS);
     }
 
     @FXML
@@ -79,7 +80,7 @@ public class MainController implements Initializable {
         String fxml = "/scheduler/view/";
         switch (action) {
             case APPOINTMENTS:
-                fxml += "Appointments.fxml";
+                fxml += "AppointmentList.fxml";
                 break;
             case CUSTOMERS:
                 fxml += "CustomerList.fxml";

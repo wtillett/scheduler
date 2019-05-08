@@ -8,6 +8,7 @@ package scheduler.controller;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -71,8 +72,8 @@ public class CustomerListController implements Initializable {
 
     private static final int GO_BACK = 0;
     private static final int ADD_CUSTOMER = 1;
-    
-    private static final String QUERY 
+
+    private static final String QUERY
             = "SELECT customer.customerName, address.address, city.city, "
             + "country.country, address.phone "
             + "FROM country "
@@ -92,7 +93,7 @@ public class CustomerListController implements Initializable {
         cityDao = new CityDao(conn);
         countryDao = new CountryDao(conn);
 
-        ObservableList<Customer> allCustomers = customerDao.getAll();
+        List<Customer> allCustomers = customerDao.getAll();
         ObservableList<CustomerTableRow> customerList
                 = FXCollections.observableArrayList();
         for (Customer customer : allCustomers) {
@@ -147,7 +148,7 @@ public class CustomerListController implements Initializable {
         customerDao.delete(customer);
         refreshTable();
     }
-    
+
     private void handleSceneChange(int action) {
         String fxml = "/scheduler/view/";
         switch (action) {
@@ -181,7 +182,6 @@ public class CustomerListController implements Initializable {
         table.setItems(customerList);
     }
 
-
     private class CustomerTableRow {
 
         int customerId;
@@ -192,9 +192,12 @@ public class CustomerListController implements Initializable {
         SimpleStringProperty colPhone = new SimpleStringProperty();
 
         CustomerTableRow(Customer customer) {
-            Address address = addressDao.get(customer.getAddressId().getValue());
-            City city = cityDao.get(address.getCityId().getValue());
-            Country country = countryDao.get(city.getCountryId().getValue());
+            Address address = addressDao.get(customer
+                    .getAddressId().getValue());
+            City city = cityDao.get(address
+                    .getCityId().getValue());
+            Country country = countryDao.get(city
+                    .getCountryId().getValue());
             this.customerId = customer.getCustomerId().getValue();
             this.colName = customer.getCustomerName();
             this.colAddress = address.getAddress();

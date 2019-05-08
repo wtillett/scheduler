@@ -10,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import scheduler.Database;
@@ -92,7 +91,7 @@ public class AppointmentDao {
         }
         return allAppointments;
     }
-
+    
     public int insert(Appointment a) {
         int result = 0;
         try (PreparedStatement ps = conn.prepareStatement(INSERT)) {
