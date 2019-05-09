@@ -108,7 +108,7 @@ public class AppointmentDao {
             ps.setTimestamp(11, now);
             ps.setString(12, Database.getCurrentUserName());
             ps.setString(13, a.getType().getValue());
-            ps.setInt(14, a.getUserId().getValue());
+            ps.setInt(14, Database.getCurrentUserId());
             ps.setString(15, a.getTitle().getValue());
             result = ps.executeUpdate();
         } catch (SQLException e) {
