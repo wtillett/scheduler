@@ -54,6 +54,10 @@ public class LoginController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         conn = Database.getConnection();
         uDao = new UserDao(conn);
+        
+        // TODO: CHANGE THIS
+        usernameField.setText("test");
+        passwordField.setText("test");
     }
 
     @FXML

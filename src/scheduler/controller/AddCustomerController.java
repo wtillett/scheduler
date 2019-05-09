@@ -63,10 +63,10 @@ public class AddCustomerController implements Initializable {
     private AddressDao addressDao;
     private CityDao cityDao;
     private CountryDao countryDao;
-    private static Customer customer;
-    private static Address address;
-    private static City city;
-    private static Country country;
+    private Customer customer;
+    private Address address;
+    private City city;
+    private Country country;
 
     /**
      * Initializes the controller class.
@@ -94,7 +94,7 @@ public class AddCustomerController implements Initializable {
             handleCountry();
             handleCity();
             handleAddress();
-            handleCustomer();
+            insertCustomer();
             handleSceneChange();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -167,11 +167,9 @@ public class AddCustomerController implements Initializable {
                 .getId(address.getAddress().getValue()));
     }
 
-    private void handleCustomer() {
+    private void insertCustomer() {
         customer.setAddressId(address.getAddressId().getValue());
         customerDao.insert(customer);
-        customer.setCustomerId(customerDao
-                .getId(customer.getCustomerName().getValue()));
     }
 
 }
