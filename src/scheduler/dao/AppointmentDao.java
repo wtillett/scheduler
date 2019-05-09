@@ -41,7 +41,7 @@ public class AppointmentDao {
             + "WHERE NOT EXISTS "
             + "(SELECT title FROM appointment WHERE title = ?)";
     private static final String UPDATE
-            = "UPDATE user SET "
+            = "UPDATE appointment SET "
             + "customerId = ?, title = ?, description = ?, location = ?, "
             + "contact = ?, url = ?, start = ?, end = ?, lastUpdate = ?, "
             + "lastUpdateBy = ?, type = ?, userId = ? "

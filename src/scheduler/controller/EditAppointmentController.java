@@ -8,6 +8,8 @@ package scheduler.controller;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -68,7 +70,7 @@ public class EditAppointmentController implements Initializable {
     private Button cancelBtn;
 
     private Connection conn;
-    private Appointment a;
+    private Appointment appointment;
     private CustomerDao cDao;
     private AppointmentDao aDao;
 
@@ -95,6 +97,12 @@ public class EditAppointmentController implements Initializable {
 
     @FXML
     private void handleSaveBtn(ActionEvent event) {
+        if (isEveryInputValid() && isDateTimeValid()) {
+            getFieldsFromInput();
+            getDateAndTimes();
+            updateAppointment();
+            handleSceneChange();
+        }
     }
 
     @FXML
@@ -115,29 +123,97 @@ public class EditAppointmentController implements Initializable {
                     .log(Level.SEVERE, null, e);
         }
     }
-    
+
     public void setAppointment(int appointmentId) {
-        a = aDao.get(appointmentId);
-        Customer customer = cDao.get(a.getCustomerId().getValue());
+        appointment = aDao.get(appointmentId);
+        Customer customer = cDao.get(appointment.getCustomerId().getValue());
         String customerName = customer.getCustomerName().getValue();
-        LocalTime start = a.getStart().toLocalTime();
-        LocalTime end = a.getEnd().toLocalTime();
+        LocalTime start = appointment.getStart().toLocalTime();
+        LocalTime end = appointment.getEnd().toLocalTime();
         String startHours = start.toString().substring(0, 2);
         String startMins = start.toString().substring(3, 5);
         String endHours = end.toString().substring(0, 2);
         String endMins = end.toString().substring(3, 5);
 
         cboCustomer.getSelectionModel().select(customerName);
-        titleField.setText(a.getTitle().getValue());
-        typeField.setText(a.getType().getValue());
-        descriptionField.setText(a.getDescription().getValue());
-        locationField.setText(a.getLocation().getValue());
-        contactField.setText(a.getContact().getValue());
-        urlField.setText(a.getUrl().getValue());
-        datePicker.setValue(a.getStart().toLocalDate());
+        titleField.setText(appointment.getTitle().getValue());
+        typeField.setText(appointment.getType().getValue());
+        descriptionField.setText(appointment.getDescription().getValue());
+        locationField.setText(appointment.getLocation().getValue());
+        contactField.setText(appointment.getContact().getValue());
+        urlField.setText(appointment.getUrl().getValue());
+        datePicker.setValue(appointment.getStart().toLocalDate());
         cboStartHours.getSelectionModel().select(startHours);
         cboStartMins.getSelectionModel().select(startMins);
         cboEndHours.getSelectionModel().select(endHours);
         cboEndMins.getSelectionModel().select(endMins);
+    }
+
+    private void updateAppointment() {
+        aDao.update(appointment);
+    }
+
+    private boolean isEveryInputValid() {
+        if (cboCustomer.getSelectionModel().getSelectedItem().isEmpty()
+                || titleField.getText().isEmpty()
+                || descriptionField.getText().isEmpty()
+                || locationField.getText().isEmpty()
+                || contactField.getText().isEmpty()
+                || urlField.getText().isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private void getFieldsFromInput() {
+        String customerName = cboCustomer.getSelectionModel().getSelectedItem();
+        int id = cDao.getId(customerName);
+        appointment.setCustomerId(id);
+        appointment.setTitle(titleField.getText());
+        appointment.setType(typeField.getText());
+        appointment.setDescription(descriptionField.getText());
+        appointment.setLocation(locationField.getText());
+        appointment.setContact(contactField.getText());
+        appointment.setUrl(urlField.getText());
+    }
+
+    private void getDateAndTimes() {
+        LocalDate date = datePicker.getValue();
+        String sh = cboStartHours.getSelectionModel().getSelectedItem();
+        String sm = cboStartMins.getSelectionModel().getSelectedItem();
+        String eh = cboEndHours.getSelectionModel().getSelectedItem();
+        String em = cboEndMins.getSelectionModel().getSelectedItem();
+        LocalTime s = LocalTime.of(Integer.parseInt(sh), Integer.parseInt(sm));
+        LocalTime e = LocalTime.of(Integer.parseInt(eh), Integer.parseInt(em));
+        LocalDateTime start = LocalDateTime.of(date, s);
+        LocalDateTime end = LocalDateTime.of(date, e);
+        appointment.setStart(start);
+        appointment.setEnd(end);
+    }
+
+    private boolean isDateTimeValid() {
+        if (cboStartHours.getSelectionModel().getSelectedItem() == null
+                || cboStartMins.getSelectionModel().getSelectedItem() == null
+                || cboEndHours.getSelectionModel().getSelectedItem() == null
+                || cboEndMins.getSelectionModel().getSelectedItem() == null) {
+            return false;
+        } else {
+            String sh = cboStartHours.getSelectionModel().getSelectedItem();
+            String sm = cboStartMins.getSelectionModel().getSelectedItem();
+            String eh = cboEndHours.getSelectionModel().getSelectedItem();
+            String em = cboEndMins.getSelectionModel().getSelectedItem();
+            if (datePicker.getValue() == null || sh.isEmpty()
+                    || sm.isEmpty() || eh.isEmpty() || em.isEmpty()) {
+                return false;
+            } else {
+                LocalTime start = LocalTime.of(Integer.parseInt(sh), Integer.parseInt(sm));
+                LocalTime end = LocalTime.of(Integer.parseInt(eh), Integer.parseInt(em));
+                if (start.isAfter(end) || start.equals(end)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

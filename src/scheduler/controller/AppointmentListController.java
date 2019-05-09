@@ -121,7 +121,7 @@ public class AppointmentListController implements Initializable {
             stage.setScene(scene);
             stage.show();
             EditAppointmentController controller = loader.getController();
-            
+
             controller.setAppointment(id);
         } catch (IOException e) {
             Logger.getLogger(AppointmentListController.class.getName())
@@ -149,7 +149,6 @@ public class AppointmentListController implements Initializable {
             case ADD_APPOINTMENT:
                 fxml += "AddAppointment.fxml";
                 break;
-
             case GO_BACK:
                 fxml += "Main.fxml";
                 break;

@@ -102,7 +102,7 @@ public class AddAppointmentController implements Initializable {
         if (isEveryInputValid() && isDateTimeValid()) {
             getFieldsFromInput();
             getDateAndTimes();
-            addAppointment();
+            insertAppointment();
             handleSceneChange();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -117,7 +117,7 @@ public class AddAppointmentController implements Initializable {
         handleSceneChange();
     }
 
-    private void addAppointment() {
+    private void insertAppointment() {
         aDao.insert(appointment);
     }
 
@@ -136,7 +136,12 @@ public class AddAppointmentController implements Initializable {
 
     protected boolean isEveryInputValid() {
         // The only optional field is TYPE
-        if (cboCustomer.getSelectionModel().getSelectedItem().isEmpty() || titleField.getText().isEmpty() || descriptionField.getText().isEmpty() || locationField.getText().isEmpty() || contactField.getText().isEmpty() || urlField.getText().isEmpty()) {
+        if (cboCustomer.getSelectionModel().getSelectedItem().isEmpty()
+                || titleField.getText().isEmpty()
+                || descriptionField.getText().isEmpty()
+                || locationField.getText().isEmpty()
+                || contactField.getText().isEmpty()
+                || urlField.getText().isEmpty()) {
             return false;
         } else {
             return true;
@@ -170,14 +175,18 @@ public class AddAppointmentController implements Initializable {
     }
 
     protected boolean isDateTimeValid() {
-        if (cboStartHours.getSelectionModel().getSelectedItem() == null || cboStartMins.getSelectionModel().getSelectedItem() == null || cboEndHours.getSelectionModel().getSelectedItem() == null || cboEndMins.getSelectionModel().getSelectedItem() == null) {
+        if (cboStartHours.getSelectionModel().getSelectedItem() == null
+                || cboStartMins.getSelectionModel().getSelectedItem() == null
+                || cboEndHours.getSelectionModel().getSelectedItem() == null
+                || cboEndMins.getSelectionModel().getSelectedItem() == null) {
             return false;
         } else {
             String sh = cboStartHours.getSelectionModel().getSelectedItem();
             String sm = cboStartMins.getSelectionModel().getSelectedItem();
             String eh = cboEndHours.getSelectionModel().getSelectedItem();
             String em = cboEndMins.getSelectionModel().getSelectedItem();
-            if (datePicker.getValue() == null || sh.isEmpty() || sm.isEmpty() || eh.isEmpty() || em.isEmpty()) {
+            if (datePicker.getValue() == null || sh.isEmpty()
+                    || sm.isEmpty() || eh.isEmpty() || em.isEmpty()) {
                 return false;
             } else {
                 LocalTime start = LocalTime.of(Integer.parseInt(sh), Integer.parseInt(sm));
