@@ -75,6 +75,27 @@ public class AddAppointmentController implements Initializable {
     protected AppointmentDao aDao;
     protected CustomerDao cDao;
 
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        conn = Database.getConnection();
+        aDao = new AppointmentDao(conn);
+        cDao = new CustomerDao(conn);
+        appointment = new Appointment();
+        cDao.getAll().forEach((Customer customer) -> {
+            cboCustomer.getItems().add(customer.getCustomerName().getValue());
+        });
+        for (int i = 0; i < 24; i++) {
+            cboStartHours.getItems().add(i < 10 ? "0" + i : "" + i);
+            cboEndHours.getItems().add(i < 10 ? "0" + i : "" + i);
+        }
+        for (int i = 0; i < 60; i++) {
+            cboStartMins.getItems().add(i < 10 ? "0" + i : "" + i);
+            cboEndMins.getItems().add(i < 10 ? "0" + i : "" + i);
+        }
+    }
 
     @FXML
     private void handleSaveBtn(ActionEvent event) {
@@ -96,30 +117,8 @@ public class AddAppointmentController implements Initializable {
         handleSceneChange();
     }
 
-
     private void addAppointment() {
         aDao.insert(appointment);
-    }
-
-    /**
-     * Initializes the controller class.
-     */
-    public void initialize(URL url, ResourceBundle rb) {
-        conn = Database.getConnection();
-        aDao = new AppointmentDao(conn);
-        cDao = new CustomerDao(conn);
-        appointment = new Appointment();
-        cDao.getAll().forEach((Customer customer) -> {
-            cboCustomer.getItems().add(customer.getCustomerName().getValue());
-        });
-        for (int i = 0; i < 24; i++) {
-            cboStartHours.getItems().add(i < 10 ? "0" + i : "" + i);
-            cboEndHours.getItems().add(i < 10 ? "0" + i : "" + i);
-        }
-        for (int i = 0; i < 60; i++) {
-            cboStartMins.getItems().add(i < 10 ? "0" + i : "" + i);
-            cboEndMins.getItems().add(i < 10 ? "0" + i : "" + i);
-        }
     }
 
     protected void handleSceneChange() {

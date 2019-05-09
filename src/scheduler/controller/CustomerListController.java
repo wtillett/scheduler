@@ -73,15 +73,6 @@ public class CustomerListController implements Initializable {
     private static final int GO_BACK = 0;
     private static final int ADD_CUSTOMER = 1;
 
-    private static final String QUERY
-            = "SELECT customer.customerName, address.address, city.city, "
-            + "country.country, address.phone "
-            + "FROM country "
-            + "JOIN city ON country.countryId = city.countryId "
-            + "JOIN address ON address.cityId = city.cityId "
-            + "JOIN customer ON customer.addressId = address.addressId "
-            + "ORDER BY customer.customerId";
-
     /**
      * Initializes the controller class.
      */

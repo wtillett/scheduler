@@ -115,7 +115,7 @@ public class EditAppointmentController implements Initializable {
                     .log(Level.SEVERE, null, e);
         }
     }
-
+    
     public void setAppointment(int appointmentId) {
         a = aDao.get(appointmentId);
         Customer customer = cDao.get(a.getCustomerId().getValue());
@@ -140,5 +140,4 @@ public class EditAppointmentController implements Initializable {
         cboEndHours.getSelectionModel().select(endHours);
         cboEndMins.getSelectionModel().select(endMins);
     }
-
 }

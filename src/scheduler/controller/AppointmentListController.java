@@ -65,8 +65,6 @@ public class AppointmentListController implements Initializable {
     private AppointmentDao aDao;
     private CustomerDao cDao;
     private UserDao uDao;
-    private static Appointment appointment;
-    private static Customer customer;
 
     private static final int ADD_APPOINTMENT = 0;
     private static final int GO_BACK = 1;
@@ -80,8 +78,6 @@ public class AppointmentListController implements Initializable {
         aDao = new AppointmentDao(conn);
         cDao = new CustomerDao(conn);
         uDao = new UserDao(conn);
-        appointment = new Appointment();
-        customer = new Customer();
 
         List<Appointment> allAppointments = aDao.getAll();
         ObservableList<AppointmentTableRow> appointmentList
@@ -113,6 +109,24 @@ public class AppointmentListController implements Initializable {
 
     @FXML
     private void handleEditBtn(ActionEvent event) {
+        AppointmentTableRow current = table.getSelectionModel().getSelectedItem();
+        int id = current.appointmentId;
+        Parent root = null;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass()
+                    .getResource("/scheduler/view/EditAppointment.fxml"));
+            root = loader.load();
+            Scene scene = new Scene(root);
+            Stage stage = Scheduler.getStage();
+            stage.setScene(scene);
+            stage.show();
+            EditAppointmentController controller = loader.getController();
+            
+            controller.setAppointment(id);
+        } catch (IOException e) {
+            Logger.getLogger(AppointmentListController.class.getName())
+                    .log(Level.SEVERE, null, e);
+        }
     }
 
     @FXML
