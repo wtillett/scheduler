@@ -13,9 +13,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.controller.AddAppointmentController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.controller.EditAppointmentController">
     <children>
-        <Label layoutX="14.0" layoutY="14.0" text="Add Appointment" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="16.0">
+        <Label layoutX="14.0" layoutY="14.0" text="Edit Appointment" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="16.0">
             <font>
                 <Font size="24.0" />
             </font>
@@ -27,7 +27,7 @@
                         <HBox alignment="CENTER_RIGHT" spacing="16.0">
                             <children>
                                 <Label text="Customer:" />
-                        <ComboBox fx:id="cboCustomer" prefWidth="150.0" />
+                                <ComboBox fx:id="cboCustomer" prefWidth="150.0" />
                             </children>
                             <VBox.margin>
                                 <Insets bottom="8.0" top="8.0" />
@@ -53,8 +53,8 @@
                         </HBox>
                         <HBox alignment="CENTER_RIGHT" spacing="16.0">
                             <children>
-                        <Label text="Description:" />
-                        <TextArea fx:id="descriptionField" prefHeight="107.0" prefWidth="149.0" promptText="Enter a description" />
+                                <Label text="Description:" />
+                                <TextArea fx:id="descriptionField" prefHeight="107.0" prefWidth="149.0" promptText="Enter a description" />
                             </children>
                             <VBox.margin>
                                 <Insets bottom="8.0" top="8.0" />
@@ -91,60 +91,60 @@
                                 <Insets bottom="8.0" top="8.0" />
                             </VBox.margin>
                         </HBox>
-                  <HBox alignment="CENTER_RIGHT" spacing="16.0">
-                     <children>
-                        <DatePicker fx:id="datePicker" editable="false" promptText="Select Date" />
-                     </children>
-                     <VBox.margin>
-                        <Insets bottom="8.0" top="8.0" />
-                     </VBox.margin>
-                  </HBox>
-                  <HBox alignment="CENTER_RIGHT">
-                     <children>
-                        <Label text="Start Time:">
-                           <HBox.margin>
-                              <Insets right="16.0" />
-                           </HBox.margin>
-                        </Label>
-                        <ComboBox fx:id="cboStartHours">
-                           <HBox.margin>
-                              <Insets right="8.0" />
-                           </HBox.margin>
-                        </ComboBox>
-                        <Label text=":" />
-                        <ComboBox fx:id="cboStartMins">
-                           <HBox.margin>
-                              <Insets left="8.0" />
-                           </HBox.margin>
-                        </ComboBox>
-                     </children>
-                     <VBox.margin>
-                        <Insets bottom="8.0" top="8.0" />
-                     </VBox.margin>
-                  </HBox>
-                  <HBox alignment="CENTER_RIGHT">
-                     <children>
-                        <Label text="End Time:">
-                           <HBox.margin>
-                              <Insets right="16.0" />
-                           </HBox.margin>
-                        </Label>
-                        <ComboBox fx:id="cboEndHours">
-                           <HBox.margin>
-                              <Insets right="8.0" />
-                           </HBox.margin>
-                        </ComboBox>
-                        <Label text=":" />
-                        <ComboBox fx:id="cboEndMins">
-                           <HBox.margin>
-                              <Insets left="8.0" />
-                           </HBox.margin>
-                        </ComboBox>
-                     </children>
-                     <VBox.margin>
-                        <Insets bottom="8.0" top="8.0" />
-                     </VBox.margin>
-                  </HBox>
+                        <HBox alignment="CENTER_RIGHT" spacing="16.0">
+                            <children>
+                                <DatePicker fx:id="datePicker" editable="false" promptText="Select Date" />
+                            </children>
+                            <VBox.margin>
+                                <Insets bottom="8.0" top="8.0" />
+                            </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT">
+                            <children>
+                                <Label text="Start Time:">
+                                    <HBox.margin>
+                                        <Insets right="16.0" />
+                                    </HBox.margin>
+                                </Label>
+                                <ComboBox fx:id="cboStartHours">
+                                    <HBox.margin>
+                                        <Insets right="8.0" />
+                                    </HBox.margin>
+                                </ComboBox>
+                                <Label text=":" />
+                                <ComboBox fx:id="cboStartMins">
+                                    <HBox.margin>
+                                        <Insets left="8.0" />
+                                    </HBox.margin>
+                                </ComboBox>
+                            </children>
+                            <VBox.margin>
+                                <Insets bottom="8.0" top="8.0" />
+                            </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER_RIGHT">
+                            <children>
+                                <Label text="End Time:">
+                                    <HBox.margin>
+                                        <Insets right="16.0" />
+                                    </HBox.margin>
+                                </Label>
+                                <ComboBox fx:id="cboEndHours">
+                                    <HBox.margin>
+                                        <Insets right="8.0" />
+                                    </HBox.margin>
+                                </ComboBox>
+                                <Label text=":" />
+                                <ComboBox fx:id="cboEndMins">
+                                    <HBox.margin>
+                                        <Insets left="8.0" />
+                                    </HBox.margin>
+                                </ComboBox>
+                            </children>
+                            <VBox.margin>
+                                <Insets bottom="8.0" top="8.0" />
+                            </VBox.margin>
+                        </HBox>
                     </children>
                 </VBox>
             </children>

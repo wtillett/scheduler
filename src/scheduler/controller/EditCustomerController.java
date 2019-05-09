@@ -37,9 +37,7 @@ import scheduler.model.Customer;
  * @author Will Tillett
  */
 public class EditCustomerController implements Initializable {
-    
-    @FXML
-    private TextField customerIdField;
+
     @FXML
     private TextField customerNameField;
     @FXML
@@ -58,9 +56,9 @@ public class EditCustomerController implements Initializable {
     private Button saveBtn;
     @FXML
     private Button cancelBtn;
-    
-    private static Connection conn;
-    private static Customer customer;
+
+    private Connection conn;
+    private Customer customer;
     private CustomerDao customerDao;
     private AddressDao addressDao;
     private CityDao cityDao;
@@ -77,33 +75,16 @@ public class EditCustomerController implements Initializable {
         cityDao = new CityDao(conn);
         countryDao = new CountryDao(conn);
     }
-    
-    public void setCustomer(int customerId) {
-        customer = customerDao.get(customerId);
-        Address address = addressDao.get(customer.getAddressId().getValue());
-        City city = cityDao.get(address.getCityId().getValue());
-        Country country = countryDao.get(city.getCountryId().getValue());
-        
-        customerIdField.setText(Integer.toString(customer
-                .getCustomerId().getValue()));
-        customerNameField.setText(customer.getCustomerName().getValue());
-        addressField.setText(address.getAddress().getValue());
-        address2Field.setText(address.getAddress2().getValue());
-        cityField.setText(city.getCity().getValue());
-        postalCodeField.setText(address.getPostalCode().getValue());
-        countryField.setText(country.getCountry().getValue());
-        phoneField.setText(address.getPhone().getValue());
-    }
-    
+
     @FXML
     private void handleSaveBtn(ActionEvent event) {
     }
-    
+
     @FXML
     private void handleCancelBtn(ActionEvent event) {
         handleSceneChange();
     }
-    
+
     private void handleSceneChange() {
         String fxml = "/scheduler/view/CustomerList.fxml";
         Parent root = null;
@@ -118,5 +99,20 @@ public class EditCustomerController implements Initializable {
                     .log(Level.SEVERE, null, e);
         }
     }
-    
+
+    public void setCustomer(int customerId) {
+        customer = customerDao.get(customerId);
+        Address address = addressDao.get(customer.getAddressId().getValue());
+        City city = cityDao.get(address.getCityId().getValue());
+        Country country = countryDao.get(city.getCountryId().getValue());
+
+        customerNameField.setText(customer.getCustomerName().getValue());
+        addressField.setText(address.getAddress().getValue());
+        address2Field.setText(address.getAddress2().getValue());
+        cityField.setText(city.getCity().getValue());
+        postalCodeField.setText(address.getPostalCode().getValue());
+        countryField.setText(country.getCountry().getValue());
+        phoneField.setText(address.getPhone().getValue());
+    }
+
 }

@@ -31,8 +31,8 @@ import scheduler.Database;
 import scheduler.Scheduler;
 import scheduler.dao.AppointmentDao;
 import scheduler.dao.CustomerDao;
-import scheduler.dao.UserDao;
 import scheduler.model.Appointment;
+import scheduler.model.Customer;
 
 /**
  * FXML Controller class
@@ -71,33 +71,10 @@ public class AddAppointmentController implements Initializable {
     private Button cancelBtn;
 
     private static Connection conn;
-    private AppointmentDao aDao;
-    private CustomerDao cDao;
-    private UserDao uDao;
     private Appointment appointment;
+    protected AppointmentDao aDao;
+    protected CustomerDao cDao;
 
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        conn = Database.getConnection();
-        aDao = new AppointmentDao(conn);
-        cDao = new CustomerDao(conn);
-        uDao = new UserDao(conn);
-        appointment = new Appointment();
-        cDao.getAll().forEach(customer -> {
-            cboCustomer.getItems().add(customer.getCustomerName().getValue());
-        });
-        for (int i = 0; i < 24; i++) {
-            cboStartHours.getItems().add(i < 10 ? "0" + i : "" + i);
-            cboEndHours.getItems().add(i < 10 ? "0" + i : "" + i);
-        }
-        for (int i = 0; i < 60; i++) {
-            cboStartMins.getItems().add(i < 10 ? "0" + i : "" + i);
-            cboEndMins.getItems().add(i < 10 ? "0" + i : "" + i);
-        }
-    }
 
     @FXML
     private void handleSaveBtn(ActionEvent event) {
@@ -119,7 +96,33 @@ public class AddAppointmentController implements Initializable {
         handleSceneChange();
     }
 
-    private void handleSceneChange() {
+
+    private void addAppointment() {
+        aDao.insert(appointment);
+    }
+
+    /**
+     * Initializes the controller class.
+     */
+    public void initialize(URL url, ResourceBundle rb) {
+        conn = Database.getConnection();
+        aDao = new AppointmentDao(conn);
+        cDao = new CustomerDao(conn);
+        appointment = new Appointment();
+        cDao.getAll().forEach((Customer customer) -> {
+            cboCustomer.getItems().add(customer.getCustomerName().getValue());
+        });
+        for (int i = 0; i < 24; i++) {
+            cboStartHours.getItems().add(i < 10 ? "0" + i : "" + i);
+            cboEndHours.getItems().add(i < 10 ? "0" + i : "" + i);
+        }
+        for (int i = 0; i < 60; i++) {
+            cboStartMins.getItems().add(i < 10 ? "0" + i : "" + i);
+            cboEndMins.getItems().add(i < 10 ? "0" + i : "" + i);
+        }
+    }
+
+    protected void handleSceneChange() {
         String fxml = "/scheduler/view/AppointmentList.fxml";
         try {
             Parent root = FXMLLoader.load(getClass().getResource(fxml));
@@ -128,26 +131,20 @@ public class AddAppointmentController implements Initializable {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            Logger.getLogger(AddAppointmentController.class.getName())
-                    .log(Level.SEVERE, null, e);
+            Logger.getLogger(AddAppointmentController.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
-    private boolean isEveryInputValid() {
+    protected boolean isEveryInputValid() {
         // The only optional field is TYPE
-        if (cboCustomer.getSelectionModel().getSelectedItem().isEmpty()
-                || titleField.getText().isEmpty()
-                || descriptionField.getText().isEmpty()
-                || locationField.getText().isEmpty()
-                || contactField.getText().isEmpty()
-                || urlField.getText().isEmpty()) {
+        if (cboCustomer.getSelectionModel().getSelectedItem().isEmpty() || titleField.getText().isEmpty() || descriptionField.getText().isEmpty() || locationField.getText().isEmpty() || contactField.getText().isEmpty() || urlField.getText().isEmpty()) {
             return false;
         } else {
             return true;
         }
     }
 
-    private void getFieldsFromInput() {
+    protected void getFieldsFromInput() {
         String customerName = cboCustomer.getSelectionModel().getSelectedItem();
         int id = cDao.getId(customerName);
         appointment.setCustomerId(id);
@@ -159,11 +156,7 @@ public class AddAppointmentController implements Initializable {
         appointment.setUrl(urlField.getText());
     }
 
-    private void addAppointment() {
-        aDao.insert(appointment);
-    }
-
-    private void getDateAndTimes() {
+    protected void getDateAndTimes() {
         LocalDate date = datePicker.getValue();
         String sh = cboStartHours.getSelectionModel().getSelectedItem();
         String sm = cboStartMins.getSelectionModel().getSelectedItem();
@@ -177,22 +170,15 @@ public class AddAppointmentController implements Initializable {
         appointment.setEnd(end);
     }
 
-    private boolean isDateTimeValid() {
-        if (cboStartHours.getSelectionModel().getSelectedItem() == null
-                || cboStartMins.getSelectionModel().getSelectedItem() == null
-                || cboEndHours.getSelectionModel().getSelectedItem() == null
-                || cboEndMins.getSelectionModel().getSelectedItem() == null) {
+    protected boolean isDateTimeValid() {
+        if (cboStartHours.getSelectionModel().getSelectedItem() == null || cboStartMins.getSelectionModel().getSelectedItem() == null || cboEndHours.getSelectionModel().getSelectedItem() == null || cboEndMins.getSelectionModel().getSelectedItem() == null) {
             return false;
         } else {
             String sh = cboStartHours.getSelectionModel().getSelectedItem();
             String sm = cboStartMins.getSelectionModel().getSelectedItem();
             String eh = cboEndHours.getSelectionModel().getSelectedItem();
             String em = cboEndMins.getSelectionModel().getSelectedItem();
-            if (datePicker.getValue() == null
-                    || sh.isEmpty()
-                    || sm.isEmpty()
-                    || eh.isEmpty()
-                    || em.isEmpty()) {
+            if (datePicker.getValue() == null || sh.isEmpty() || sm.isEmpty() || eh.isEmpty() || em.isEmpty()) {
                 return false;
             } else {
                 LocalTime start = LocalTime.of(Integer.parseInt(sh), Integer.parseInt(sm));
@@ -204,4 +190,5 @@ public class AddAppointmentController implements Initializable {
         }
         return true;
     }
+
 }
