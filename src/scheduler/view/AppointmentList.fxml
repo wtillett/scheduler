@@ -29,9 +29,10 @@
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="598.0">
                     <children>
-                        <ButtonBar buttonMinWidth="128.0" layoutX="225.0" layoutY="9.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="16.0">
+                        <ButtonBar buttonMinWidth="96.0" layoutX="225.0" layoutY="9.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="16.0">
                             <buttons>
-                                <Button fx:id="newAppointmentBtn" mnemonicParsing="false" onAction="#handleNewAppointmentBtn" text="New Appointment" />
+                        <Button fx:id="customerBtn" mnemonicParsing="false" onAction="#handleCustomerBtn" text="Customer" />
+                                <Button fx:id="newAppointmentBtn" mnemonicParsing="false" onAction="#handleNewAppointmentBtn" text="New" />
                                 <Button fx:id="editBtn" mnemonicParsing="false" onAction="#handleEditBtn" text="Edit/Details" />
                                 <Button fx:id="deleteBtn" mnemonicParsing="false" onAction="#handleDeleteBtn" text="Delete" />
                                 <Button fx:id="goBackBtn" mnemonicParsing="false" onAction="#handleGoBackBtn" text="Go Back" />

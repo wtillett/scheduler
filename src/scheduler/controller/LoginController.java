@@ -12,6 +12,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -21,14 +25,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import scheduler.Scheduler;
+import scheduler.dao.AppointmentDao;
 import scheduler.dao.CustomerDao;
 import scheduler.dao.UserDao;
+import scheduler.model.Appointment;
 
 /**
  *
@@ -51,6 +58,7 @@ public class LoginController implements Initializable {
     @FXML
     private Label passwordLabel;
 
+    AppointmentDao aDao;
     CustomerDao cDao;
     UserDao uDao;
     Connection conn;
@@ -66,6 +74,8 @@ public class LoginController implements Initializable {
         passwordLabel.setText(rb.getString("PASSWORD"));
 
         conn = Database.getConnection();
+        aDao = new AppointmentDao(conn);
+        cDao = new CustomerDao(conn);
         uDao = new UserDao(conn);
 
         // TODO: CHANGE THIS
@@ -90,6 +100,7 @@ public class LoginController implements Initializable {
             Database.setCurrentUser(uDao.getByUserName(userName));
             System.out.println("Successfully logged in as: "
                     + Database.getCurrentUserName());
+            checkForAppointments();
             Parent root = null;
             try {
                 root = FXMLLoader.load(getClass()
@@ -128,5 +139,32 @@ public class LoginController implements Initializable {
             return false;
         }
         return password.equals(dbPassword);
+    }
+
+    private void checkForAppointments() {
+        List<Appointment> appointments = new ArrayList<>();
+        List<Appointment> soon = new ArrayList<>();
+        aDao.getAll().stream()
+                .filter(appointment
+                        -> appointment.getUserId().getValue()
+                == Database.getCurrentUserId())
+                .forEach(appointments::add);
+        LocalDateTime now = LocalDateTime.now();
+        appointments.stream().filter((Appointment appointment) -> {
+            long minutes = now.until(appointment.getStart(), ChronoUnit.MINUTES);
+            return minutes > 0 && minutes < 15;
+        }).forEach(soon::add);
+        if (soon.size() > 0) {
+            soon.stream().forEach((Appointment appointment) -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                String name = cDao.get(appointment.getCustomerId().getValue())
+                        .getCustomerName().getValue();
+                long minutes = now.until(appointment.getStart(), ChronoUnit.MINUTES);
+                alert.setTitle("Upcoming Appointment");
+                alert.setContentText("Appointment with " + name + " in "
+                        + minutes + " minutes!");
+                alert.showAndWait();
+            });
+        }
     }
 }

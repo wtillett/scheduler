@@ -60,6 +60,8 @@ public class AppointmentListController implements Initializable {
     private Button deleteBtn;
     @FXML
     private Button goBackBtn;
+    @FXML
+    private Button customerBtn;
 
     private static Connection conn;
     private AppointmentDao aDao;
@@ -99,7 +101,29 @@ public class AppointmentListController implements Initializable {
         colEnd.setCellValueFactory(cellData
                 -> cellData.getValue().colEnd);
         table.setItems(appointmentList);
+    }
 
+    @FXML
+    private void handleCustomerBtn(ActionEvent event) {
+        AppointmentTableRow current = table.getSelectionModel().getSelectedItem();
+        String customerName = current.colCustomerName.getValue();
+        int id = cDao.getId(customerName);
+        Parent root = null;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass()
+                    .getResource("/scheduler/view/EditCustomer.fxml"));
+            root = loader.load();
+            Scene scene = new Scene(root);
+            Stage stage = Scheduler.getStage();
+            stage.setScene(scene);
+            stage.show();
+            EditCustomerController controller = loader.getController();
+
+            controller.setCustomer(id);
+        } catch (IOException e) {
+            Logger.getLogger(AppointmentListController.class.getName())
+                    .log(Level.SEVERE, null, e);
+        }
     }
 
     @FXML
