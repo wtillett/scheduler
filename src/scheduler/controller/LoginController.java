@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -45,6 +46,10 @@ public class LoginController implements Initializable {
     private Button loginBtn;
     @FXML
     private Label loginLabel;
+    @FXML
+    private Label usernameLabel;
+    @FXML
+    private Label passwordLabel;
 
     CustomerDao cDao;
     UserDao uDao;
@@ -52,9 +57,17 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        Locale locale = Locale.getDefault();
+        rb = ResourceBundle.getBundle("res/login", locale);
+        cancelBtn.setText(rb.getString("CANCEL_BUTTON"));
+        loginBtn.setText(rb.getString("LOGIN_BUTTON"));
+        loginLabel.setText(rb.getString("TITLE"));
+        usernameLabel.setText(rb.getString("USERNAME"));
+        passwordLabel.setText(rb.getString("PASSWORD"));
+
         conn = Database.getConnection();
         uDao = new UserDao(conn);
-        
+
         // TODO: CHANGE THIS
         usernameField.setText("test");
         passwordField.setText("test");
