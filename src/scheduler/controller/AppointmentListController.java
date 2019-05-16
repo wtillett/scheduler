@@ -36,7 +36,7 @@ import scheduler.model.Customer;
 /**
  * FXML Controller class
  *
- * @author wtill
+ * @author Will Tillett
  */
 public class AppointmentListController implements Initializable {
 
