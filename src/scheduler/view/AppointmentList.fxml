@@ -17,7 +17,7 @@
                             <columns>
                                 <TableColumn fx:id="colCustomerName" prefWidth="73.0" text="Name" />
                                 <TableColumn fx:id="colType" prefWidth="77.0" text="Type" />
-                                <TableColumn fx:id="colLocation" prefWidth="75.0" text="Location" />
+                                <TableColumn fx:id="colDate" prefWidth="75.0" text="Date" />
                                 <TableColumn fx:id="colStart" prefWidth="75.0" text="Start" />
                                 <TableColumn fx:id="colEnd" prefWidth="75.0" text="End" />
                             </columns>

@@ -47,7 +47,7 @@ public class AppointmentListController implements Initializable {
     @FXML
     private TableColumn<AppointmentTableRow, String> colType;
     @FXML
-    private TableColumn<AppointmentTableRow, String> colLocation;
+    private TableColumn<AppointmentTableRow, String> colDate;
     @FXML
     private TableColumn<AppointmentTableRow, String> colStart;
     @FXML
@@ -92,8 +92,8 @@ public class AppointmentListController implements Initializable {
                 -> cellData.getValue().colCustomerName);
         colType.setCellValueFactory(cellData
                 -> cellData.getValue().colType);
-        colLocation.setCellValueFactory(cellData
-                -> cellData.getValue().colLocation);
+        colDate.setCellValueFactory(cellData
+                -> cellData.getValue().colDate);
         colStart.setCellValueFactory(cellData
                 -> cellData.getValue().colStart);
         colEnd.setCellValueFactory(cellData
@@ -181,7 +181,7 @@ public class AppointmentListController implements Initializable {
         int appointmentId;
         SimpleStringProperty colCustomerName = new SimpleStringProperty();
         SimpleStringProperty colType = new SimpleStringProperty();
-        SimpleStringProperty colLocation = new SimpleStringProperty();
+        SimpleStringProperty colDate;
         SimpleStringProperty colStart;
         SimpleStringProperty colEnd;
 
@@ -191,9 +191,12 @@ public class AppointmentListController implements Initializable {
                     .getCustomerId().getValue());
             this.colCustomerName = customer.getCustomerName();
             this.colType = appointment.getType();
-            this.colLocation = appointment.getLocation();
-            this.colStart = new SimpleStringProperty(appointment.getStart().toString());
-            this.colEnd = new SimpleStringProperty(appointment.getEnd().toString());
+            this.colDate = new SimpleStringProperty(appointment
+                    .getStart().toLocalDate().toString());
+            this.colStart = new SimpleStringProperty(appointment
+                    .getStart().toLocalTime().toString());
+            this.colEnd = new SimpleStringProperty(appointment
+                    .getEnd().toLocalTime().toString());
         }
     }
 }
