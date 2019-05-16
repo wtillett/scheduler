@@ -160,16 +160,12 @@ public class EditAppointmentController implements Initializable {
     }
 
     private boolean isEveryInputValid() {
-        if (cboCustomer.getSelectionModel().getSelectedItem().isEmpty()
+        return !(cboCustomer.getSelectionModel().getSelectedItem().isEmpty()
                 || titleField.getText().isEmpty()
                 || descriptionField.getText().isEmpty()
                 || locationField.getText().isEmpty()
                 || contactField.getText().isEmpty()
-                || urlField.getText().isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
+                || urlField.getText().isEmpty());
     }
 
     private void getFieldsFromInput() {
