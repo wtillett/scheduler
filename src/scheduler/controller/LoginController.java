@@ -126,14 +126,14 @@ public class LoginController implements Initializable {
     }
 
     private void logUser() {
-        File file = new File("log.txt");
-        try (PrintWriter pw = new PrintWriter(new FileWriter("log.txt", true))) {
-            String content = "[" + LocalDateTime.now() + "] : Login by "
+        File log = new File("log.txt");
+        try (PrintWriter pw = new PrintWriter(new FileWriter(log, true))) {
+            String content = "[" + LocalDateTime.now() + "] - Login by "
                     + Database.getCurrentUserName();
             pw.println(content);
-            System.out.println(file.getAbsolutePath());
         } catch (IOException e) {
-            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(LoginController.class.getName())
+                    .log(Level.SEVERE, null, e);
         }
     }
 
