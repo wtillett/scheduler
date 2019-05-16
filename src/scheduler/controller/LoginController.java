@@ -5,7 +5,12 @@
  */
 package scheduler.controller;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import scheduler.Database;
 import java.net.URL;
 import java.sql.Connection;
@@ -18,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -100,10 +107,10 @@ public class LoginController implements Initializable {
             Database.setCurrentUser(uDao.getByUserName(userName));
             System.out.println("Successfully logged in as: "
                     + Database.getCurrentUserName());
+            logUser();
             checkForAppointments();
-            Parent root = null;
             try {
-                root = FXMLLoader.load(getClass()
+                Parent root = FXMLLoader.load(getClass()
                         .getResource("/scheduler/view/Main.fxml"));
                 Scene scene = new Scene(root);
                 Stage stage = Scheduler.getStage();
@@ -118,6 +125,18 @@ public class LoginController implements Initializable {
         }
     }
 
+    private void logUser() {
+        File file = new File("log.txt");
+        try (PrintWriter pw = new PrintWriter(new FileWriter("log.txt", true))) {
+            String content = "[" + LocalDateTime.now() + "] : Login by "
+                    + Database.getCurrentUserName();
+            pw.println(content);
+            System.out.println(file.getAbsolutePath());
+        } catch (IOException e) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
     private boolean checkCredentials(String userName, String password) {
         if (userName.isEmpty() || password.isEmpty()) {
             return false;
@@ -125,7 +144,7 @@ public class LoginController implements Initializable {
         final String query = "SELECT password "
                 + "FROM user "
                 + "WHERE userName = ?";
-        String dbPassword = "";
+        String dbPassword;
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, userName);
             ResultSet rs = ps.executeQuery();
