@@ -191,6 +191,7 @@ public class EditAppointmentController implements Initializable {
         LocalTime e = LocalTime.of(Integer.parseInt(eh), Integer.parseInt(em));
         LocalDateTime start = LocalDateTime.of(date, s);
         LocalDateTime end = LocalDateTime.of(date, e);
+        start = start.atZone(ZoneOffset.UTC).toLocalDateTime();
         appointment.setStart(start);
         appointment.setEnd(end);
     }
