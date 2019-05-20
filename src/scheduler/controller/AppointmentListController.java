@@ -22,6 +22,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
@@ -53,6 +55,8 @@ public class AppointmentListController implements Initializable {
     @FXML
     private TableColumn<AppointmentTableRow, String> colEnd;
     @FXML
+    private ChoiceBox<String> cb;
+    @FXML
     private Button newAppointmentBtn;
     @FXML
     private Button editBtn;
@@ -80,6 +84,8 @@ public class AppointmentListController implements Initializable {
         uDao = new UserDao(conn);
 
         List<Appointment> allAppointments = aDao.getAll();
+        List<Appointment> thisMonth;
+        List<Appointment> thisWeek;
         ObservableList<AppointmentTableRow> appointmentList
                 = FXCollections.observableArrayList();
         for (Appointment apt : allAppointments) {
@@ -87,6 +93,9 @@ public class AppointmentListController implements Initializable {
                 appointmentList.add(new AppointmentTableRow(apt));
             }
         }
+        
+        cb.setItems(FXCollections.observableArrayList(
+                "All Appointments", new Separator(), "This Week", "This Month"));
 
         colCustomerName.setCellValueFactory(cellData
                 -> cellData.getValue().colCustomerName);

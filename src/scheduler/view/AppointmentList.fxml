@@ -2,10 +2,12 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.controller.AppointmentListController">
     <children>
@@ -29,14 +31,19 @@
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="598.0">
                     <children>
-                        <ButtonBar buttonMinWidth="96.0" layoutX="225.0" layoutY="9.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="16.0">
-                            <buttons>
-                                <Button fx:id="newAppointmentBtn" mnemonicParsing="false" onAction="#handleNewAppointmentBtn" text="New" />
-                                <Button fx:id="editBtn" mnemonicParsing="false" onAction="#handleEditBtn" text="Edit/Details" />
-                                <Button fx:id="deleteBtn" mnemonicParsing="false" onAction="#handleDeleteBtn" text="Delete" />
-                                <Button fx:id="goBackBtn" mnemonicParsing="false" onAction="#handleGoBackBtn" text="Go Back" />
-                            </buttons>
-                        </ButtonBar>
+                  <HBox alignment="CENTER" layoutX="14.0" layoutY="8.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="8.0">
+                     <children>
+                        <ChoiceBox fx:id="cb" prefWidth="150.0" />
+                              <ButtonBar buttonMinWidth="96.0" prefHeight="40.0" prefWidth="200.0">
+                                  <buttons>
+                                      <Button fx:id="newAppointmentBtn" mnemonicParsing="false" onAction="#handleNewAppointmentBtn" text="New" />
+                                      <Button fx:id="editBtn" mnemonicParsing="false" onAction="#handleEditBtn" text="Edit/Details" />
+                                      <Button fx:id="deleteBtn" mnemonicParsing="false" onAction="#handleDeleteBtn" text="Delete" />
+                                      <Button fx:id="goBackBtn" mnemonicParsing="false" onAction="#handleGoBackBtn" text="Go Back" />
+                                  </buttons>
+                              </ButtonBar>
+                     </children>
+                  </HBox>
                     </children>
                 </AnchorPane>
             </items>
