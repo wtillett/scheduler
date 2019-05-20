@@ -8,11 +8,14 @@ package scheduler.controller;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -55,7 +58,7 @@ public class AppointmentListController implements Initializable {
     @FXML
     private TableColumn<AppointmentTableRow, String> colEnd;
     @FXML
-    private ChoiceBox<String> cb;
+    private ChoiceBox<Object> cb;
     @FXML
     private Button newAppointmentBtn;
     @FXML
@@ -73,6 +76,10 @@ public class AppointmentListController implements Initializable {
     private static final int ADD_APPOINTMENT = 0;
     private static final int GO_BACK = 1;
 
+    private static final int ALL_APPOINTMENTS = 0;
+    private static final int WEEK = 2;
+    private static final int MONTH = 3;
+
     /**
      * Initializes the controller class.
      */
@@ -83,19 +90,21 @@ public class AppointmentListController implements Initializable {
         cDao = new CustomerDao(conn);
         uDao = new UserDao(conn);
 
+        LocalDate today = LocalDate.now();
+        LocalDate oneMonth = today.plusMonths(1);
+        LocalDate oneWeek = today.plusWeeks(1);
+
         List<Appointment> allAppointments = aDao.getAll();
-        List<Appointment> thisMonth;
-        List<Appointment> thisWeek;
-        ObservableList<AppointmentTableRow> appointmentList
-                = FXCollections.observableArrayList();
-        for (Appointment apt : allAppointments) {
-            if (apt.getUserId().getValue() == Database.getCurrentUserId()) {
-                appointmentList.add(new AppointmentTableRow(apt));
+        List<Appointment> thisMonth = FXCollections.observableArrayList();
+        List<Appointment> thisWeek = FXCollections.observableArrayList();
+        allAppointments.forEach((Appointment a) -> {
+            if (a.getStart().toLocalDate().isBefore(oneWeek)) {
+                thisWeek.add(a);
+                thisMonth.add(a);
+            } else if (a.getStart().toLocalDate().isBefore(oneMonth)) {
+                thisMonth.add(a);
             }
-        }
-        
-        cb.setItems(FXCollections.observableArrayList(
-                "All Appointments", new Separator(), "This Week", "This Month"));
+        });
 
         colCustomerName.setCellValueFactory(cellData
                 -> cellData.getValue().colCustomerName);
@@ -107,7 +116,31 @@ public class AppointmentListController implements Initializable {
                 -> cellData.getValue().colStart);
         colEnd.setCellValueFactory(cellData
                 -> cellData.getValue().colEnd);
-        table.setItems(appointmentList);
+
+        cb.setItems(FXCollections.observableArrayList(
+                "All Appointments", new Separator(),
+                "This Week", "This Month"));
+        cb.getSelectionModel().selectedIndexProperty()
+                .addListener(new ChangeListener<Number>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Number> observable,
+                            Number oldValue, Number newValue) {
+                        switch (newValue.intValue()) {
+                            case ALL_APPOINTMENTS:
+                                refreshTable(allAppointments);
+                                break;
+                            case WEEK:
+                                refreshTable(thisWeek);
+                                break;
+                            case MONTH:
+                                refreshTable(thisMonth);
+                                break;
+                            default:
+                                refreshTable(allAppointments);
+                        }
+                    }
+                });
+        cb.getSelectionModel().select(ALL_APPOINTMENTS);
     }
 
     @FXML
@@ -143,7 +176,7 @@ public class AppointmentListController implements Initializable {
         int id = current.appointmentId;
         Appointment appointment = aDao.get(id);
         aDao.delete(appointment);
-        refreshTable();
+        refreshTable(aDao.getAll());
     }
 
     @FXML
@@ -173,16 +206,17 @@ public class AppointmentListController implements Initializable {
         }
     }
 
-    private void refreshTable() {
-        List<Appointment> allAppointments = aDao.getAll();
+    private void refreshTable(List<Appointment> list) {
         ObservableList<AppointmentTableRow> appointmentList
                 = FXCollections.observableArrayList();
-        for (Appointment apt : allAppointments) {
-            if (apt.getUserId().getValue() == Database.getCurrentUserId()) {
-                appointmentList.add(new AppointmentTableRow(apt));
-            }
-        }
+        populateList(list, appointmentList);
         table.setItems(appointmentList);
+    }
+
+    private void populateList(List<Appointment> appointments,
+            ObservableList<AppointmentTableRow> list) {
+        appointments.forEach((Appointment a)
+                -> list.add(new AppointmentTableRow(a)));
     }
 
     private class AppointmentTableRow {
