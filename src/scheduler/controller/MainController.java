@@ -49,21 +49,21 @@ public class MainController implements Initializable {
     private static final int REPORTS = 2;
     private static final int CANCEL = 3;
 
-    private static final File log = new File("log.txt");
+    private static final File LOG = new File("log.txt");
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        if (!log.exists()) {
+        if (!LOG.exists()) {
             logBtn.setDisable(true);
         }
     }
 
     @FXML
     private void handleLogoutBtn(ActionEvent event) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(log, true))) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(LOG, true))) {
             String content = "[" + LocalDateTime.now() + "] - Logout by "
                     + Database.getCurrentUserName();
             pw.println(content);
@@ -93,7 +93,7 @@ public class MainController implements Initializable {
     @FXML
     private void handleLogBtn(ActionEvent event) throws IOException {
         Desktop desktop = Desktop.getDesktop();
-        desktop.open(log);
+        desktop.open(LOG);
     }
 
     private void handleSceneChange(int action) {
@@ -106,15 +106,14 @@ public class MainController implements Initializable {
                 fxml += "CustomerList.fxml";
                 break;
             case REPORTS:
-                fxml += "Reports.fxml";
+                fxml += "report/Main.fxml";
                 break;
             case CANCEL:
                 fxml += "Login.fxml";
                 break;
         }
-        Parent root = null;
         try {
-            root = FXMLLoader.load(getClass().getResource(fxml));
+            Parent root = FXMLLoader.load(getClass().getResource(fxml));
             Scene scene = new Scene(root);
             Stage stage = Scheduler.getStage();
             stage.setScene(scene);

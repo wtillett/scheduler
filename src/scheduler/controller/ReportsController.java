@@ -16,9 +16,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import scheduler.Scheduler;
 
@@ -29,12 +26,10 @@ import scheduler.Scheduler;
  */
 public class ReportsController implements Initializable {
 
-    @FXML
-    private StackPane stack;
-    @FXML
-    private ChoiceBox<String> cb;
-    @FXML
-    private Button goBackBtn;
+    private static final int APPT_TYPE_BY_MONTH = 0;
+    private static final int CONSULTANT_SCHEDULE = 1;
+    private static final int TBD = 2;
+    private static final int CANCEL = 3;
 
     /**
      * Initializes the controller class.
@@ -42,11 +37,38 @@ public class ReportsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
+    }
 
     @FXML
-    private void handleGoBackBtn(ActionEvent event) {
-        String fxml = "/scheduler/view/Main.fxml";
+    void handleApptTypeBtn(ActionEvent event) {
+        handleSceneChange(APPT_TYPE_BY_MONTH);
+    }
+
+    @FXML
+    void handleConsultantBtn(ActionEvent event) {
+        handleSceneChange(CONSULTANT_SCHEDULE);
+    }
+
+    @FXML
+    void handleCancelBtn(ActionEvent event) {
+        handleSceneChange(CANCEL);
+    }
+
+    private void handleSceneChange(int action) {
+        String fxml = "/scheduler/view/report/";
+        switch (action) {
+            case APPT_TYPE_BY_MONTH:
+                fxml += "ApptTypeByMonth.fxml";
+                break;
+            case CONSULTANT_SCHEDULE:
+                fxml += "ScheduleByConsultant.fxml";
+                break;
+            case TBD:
+                break;
+            case CANCEL:
+                fxml = "/scheduler/view/Main.fxml";
+                break;
+        }
         try {
             Parent root = FXMLLoader.load(getClass().getResource(fxml));
             Scene scene = new Scene(root);
@@ -58,5 +80,5 @@ public class ReportsController implements Initializable {
                     .log(Level.SEVERE, null, e);
         }
     }
-    
+
 }
