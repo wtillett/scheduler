@@ -34,7 +34,7 @@
                   <HBox alignment="CENTER" layoutX="14.0" layoutY="8.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="8.0">
                      <children>
                         <ChoiceBox fx:id="cb" prefWidth="150.0" />
-                              <ButtonBar buttonMinWidth="96.0" prefHeight="40.0" prefWidth="200.0">
+                              <ButtonBar buttonMinWidth="96.0" prefHeight="40.0">
                                   <buttons>
                                       <Button fx:id="newAppointmentBtn" mnemonicParsing="false" onAction="#handleNewAppointmentBtn" text="New" />
                                       <Button fx:id="editBtn" mnemonicParsing="false" onAction="#handleEditBtn" text="Edit/Details" />

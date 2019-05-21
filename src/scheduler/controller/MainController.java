@@ -87,6 +87,7 @@ public class MainController implements Initializable {
 
     @FXML
     private void handleReportsBtn(ActionEvent event) {
+        handleSceneChange(REPORTS);
     }
 
     @FXML
