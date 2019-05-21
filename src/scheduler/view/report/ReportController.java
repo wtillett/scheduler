@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package scheduler.controller;
+package scheduler.view.report;
 
 import java.io.IOException;
 import java.net.URL;
@@ -24,7 +24,7 @@ import scheduler.Scheduler;
  *
  * @author Will Tillett
  */
-public class ReportsController implements Initializable {
+public class ReportController implements Initializable {
 
     private static final int APPT_TYPE_BY_MONTH = 0;
     private static final int CONSULTANT_SCHEDULE = 1;
@@ -36,7 +36,6 @@ public class ReportsController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
     }
 
     @FXML
@@ -76,7 +75,7 @@ public class ReportsController implements Initializable {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            Logger.getLogger(ReportsController.class.getName())
+            Logger.getLogger(ReportController.class.getName())
                     .log(Level.SEVERE, null, e);
         }
     }
