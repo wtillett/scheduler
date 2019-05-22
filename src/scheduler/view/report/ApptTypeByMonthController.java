@@ -8,10 +8,16 @@ package scheduler.view.report;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -59,35 +65,29 @@ public class ApptTypeByMonthController implements Initializable {
         aDao = new AppointmentDao(conn);
 
         List<Appointment> appointments = aDao.getAll();
-        Map map = new LinkedHashMap();
+        Map<String, Integer> map = new LinkedHashMap<>();
+        List<String> months = new ArrayList<>(Arrays.asList("Jan", "Feb",
+                "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct",
+                "Nov", "Dec"));
+        Set<String> types = new HashSet<>();
         
-        map.put("Jan", 0);
-        map.put("Feb", 0);
-        map.put("Mar", 0);
-        map.put("Apr", 0);
-        map.put("May", 0);
-        map.put("Jun", 0);
-        map.put("Jul", 0);
-        map.put("Aug", 0);
-        map.put("Sep", 0);
-        map.put("Oct", 0);
-        map.put("Nov", 0);
-        map.put("Dec", 0);
+        months.forEach(month -> {
+            appointments.forEach((Appointment a) -> {
+                if (month.equals(extractMonth(a))) {
+                    types.add(a.getType().getValue());
+                }
+            });
+            map.put(month, types.size());
+            types.clear();
+        });
 
         XYChart.Series data = new XYChart.Series();
-        data.getData().add(new XYChart.Data("Jan", 1));
-        data.getData().add(new XYChart.Data("Feb", 2));
-        data.getData().add(new XYChart.Data("Mar", 3));
-        data.getData().add(new XYChart.Data("Apr", 6));
-        data.getData().add(new XYChart.Data("May", 0));
-        data.getData().add(new XYChart.Data("Jun", 2));
-        data.getData().add(new XYChart.Data("Jul", 5));
-        data.getData().add(new XYChart.Data("Aug", 1));
-        data.getData().add(new XYChart.Data("Sep", 10));
-        data.getData().add(new XYChart.Data("Oct", 0));
-        data.getData().add(new XYChart.Data("Nov", 2));
-        data.getData().add(new XYChart.Data("Dec", 0));
         
+        map.forEach((month, count) -> {
+            data.getData().add(
+                    new XYChart.Data(month, count));
+        });
+
         bc.getData().add(data);
     }
 
@@ -104,6 +104,13 @@ public class ApptTypeByMonthController implements Initializable {
             Logger.getLogger(ApptTypeByMonthController.class.getName())
                     .log(Level.SEVERE, null, e);
         }
+    }
+
+    private String extractMonth(Appointment a) {
+        LocalDate date = a.getStart().toLocalDate();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MMM");
+        String month = date.format(dtf);
+        return month;
     }
 
 }
