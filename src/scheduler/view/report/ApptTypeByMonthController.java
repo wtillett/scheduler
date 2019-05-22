@@ -8,7 +8,9 @@ package scheduler.view.report;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,23 +59,35 @@ public class ApptTypeByMonthController implements Initializable {
         aDao = new AppointmentDao(conn);
 
         List<Appointment> appointments = aDao.getAll();
+        Map map = new LinkedHashMap();
+        
+        map.put("Jan", 0);
+        map.put("Feb", 0);
+        map.put("Mar", 0);
+        map.put("Apr", 0);
+        map.put("May", 0);
+        map.put("Jun", 0);
+        map.put("Jul", 0);
+        map.put("Aug", 0);
+        map.put("Sep", 0);
+        map.put("Oct", 0);
+        map.put("Nov", 0);
+        map.put("Dec", 0);
 
         XYChart.Series data = new XYChart.Series();
-        data.getData().add(new XYChart.Data("J", 0));
-        data.getData().add(new XYChart.Data("F", 0));
-        data.getData().add(new XYChart.Data("M", 0));
-        data.getData().add(new XYChart.Data("A", 0));
-        data.getData().add(new XYChart.Data("M", 0));
-        data.getData().add(new XYChart.Data("J", 0));
-        data.getData().add(new XYChart.Data("J", 0));
-        data.getData().add(new XYChart.Data("A", 0));
-        data.getData().add(new XYChart.Data("S", 0));
-        data.getData().add(new XYChart.Data("O", 0));
-        data.getData().add(new XYChart.Data("N", 0));
-        data.getData().add(new XYChart.Data("D", 0));
+        data.getData().add(new XYChart.Data("Jan", 1));
+        data.getData().add(new XYChart.Data("Feb", 2));
+        data.getData().add(new XYChart.Data("Mar", 3));
+        data.getData().add(new XYChart.Data("Apr", 6));
+        data.getData().add(new XYChart.Data("May", 0));
+        data.getData().add(new XYChart.Data("Jun", 2));
+        data.getData().add(new XYChart.Data("Jul", 5));
+        data.getData().add(new XYChart.Data("Aug", 1));
+        data.getData().add(new XYChart.Data("Sep", 10));
+        data.getData().add(new XYChart.Data("Oct", 0));
+        data.getData().add(new XYChart.Data("Nov", 2));
+        data.getData().add(new XYChart.Data("Dec", 0));
         
-        bc.setLegendVisible(false);
-
         bc.getData().add(data);
     }
 
