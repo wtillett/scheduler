@@ -37,9 +37,7 @@ public class AppointmentDao {
             + "(customerId, title, description, location, contact, url, "
             + "start, end, createDate, createdBy, lastUpdate, lastUpdateBy, "
             + "type, userId) "
-            + "SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? FROM DUAL "
-            + "WHERE NOT EXISTS "
-            + "(SELECT title FROM appointment WHERE title = ?)";
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE
             = "UPDATE appointment SET "
             + "customerId = ?, title = ?, description = ?, location = ?, "
@@ -109,7 +107,6 @@ public class AppointmentDao {
             ps.setString(12, Database.getCurrentUserName());
             ps.setString(13, a.getType().getValue());
             ps.setInt(14, Database.getCurrentUserId());
-            ps.setString(15, a.getTitle().getValue());
             result = ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("insertAppointment: " + e.getMessage());
