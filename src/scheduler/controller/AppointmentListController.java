@@ -79,6 +79,10 @@ public class AppointmentListController implements Initializable {
     private static final int ALL_APPOINTMENTS = 0;
     private static final int WEEK = 2;
     private static final int MONTH = 3;
+    
+    private LocalDate today;
+    private LocalDate oneMonth;
+    private LocalDate oneWeek;
 
     /**
      * Initializes the controller class.
@@ -89,19 +93,19 @@ public class AppointmentListController implements Initializable {
         aDao = new AppointmentDao(conn);
         cDao = new CustomerDao(conn);
         uDao = new UserDao(conn);
-
-        LocalDate today = LocalDate.now();
-        LocalDate oneMonth = today.plusMonths(1);
-        LocalDate oneWeek = today.plusWeeks(1);
+        
+        today = LocalDate.now();
+        oneMonth = today.plusMonths(1);
+        oneWeek = today.plusWeeks(1);
 
         List<Appointment> allAppointments = aDao.getAll();
         List<Appointment> thisMonth = FXCollections.observableArrayList();
         List<Appointment> thisWeek = FXCollections.observableArrayList();
         allAppointments.forEach((Appointment a) -> {
-            if (a.getStart().toLocalDate().isBefore(oneWeek)) {
+            if (isWithinOneWeek(a.getStart().toLocalDate())) {
                 thisWeek.add(a);
                 thisMonth.add(a);
-            } else if (a.getStart().toLocalDate().isBefore(oneMonth)) {
+            } else if (isWithinOneMonth(a.getStart().toLocalDate())) {
                 thisMonth.add(a);
             }
         });
@@ -217,6 +221,14 @@ public class AppointmentListController implements Initializable {
             ObservableList<AppointmentTableRow> list) {
         appointments.forEach((Appointment a)
                 -> list.add(new AppointmentTableRow(a)));
+    }
+
+    private boolean isWithinOneWeek(LocalDate date) {
+        return date.isBefore(oneWeek) && date.isAfter(today.minusDays(1));
+    }
+
+    private boolean isWithinOneMonth(LocalDate date) {
+        return date.isBefore(oneMonth) && date.isAfter(today.minusDays(1));
     }
 
     private class AppointmentTableRow {
